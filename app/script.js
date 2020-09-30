@@ -32,7 +32,7 @@ const init1 = async (val) => {
     return userAccount;
   }
 
- async function initApi() {
+  function initApi() {
     var express = require("express");
     var app = express();
 

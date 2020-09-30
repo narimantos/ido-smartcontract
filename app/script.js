@@ -32,7 +32,7 @@ const init1 = async (val) => {
     return userAccount;
   }
 
-  function initApi() {
+ async function initApi() {
     var express = require("express");
     var app = express();
 
@@ -48,13 +48,10 @@ const init1 = async (val) => {
       var returns;
 
       var result = init1(account).then(val => {
-        console.log(val);
+        res.json(JSON.stringify(val));
         return val;
       });
-
-      res.json(JSON.stringify(result));
-        
-
+      console.log( result);
     })
 
   }

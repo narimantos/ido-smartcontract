@@ -1,0 +1,25 @@
+{
+  "name": "ethereum",
+  "version": "1.0.0",
+  "description": "no",
+  "main": "test.js",
+  "dependencies": {
+    "fs": "0.0.1-security",
+    "require": "^2.4.20",
+    "web3": "^1.3.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-preset-es2015": "^6.24.1",
+    "babelify": "^10.0.0"
+  },
+  "scripts": {
+    "test": "hi",
+    "start": "http-server -c-1 -p 8545"
+  },
+  "keywords": [
+    "no"
+  ],
+  "author": "no",
+  "license": "ISC"
+}

@@ -9,3 +9,4 @@ https://eips.ethereum.org/EIPS/eip-1193
 https://medium.com/@awantoch/how-to-connect-web3-js-to-metamask-in-2020-fee2b2edf58a
 https://ethereum.stackexchange.com/questions/82073/window-ethereum
 https://github.com/ethereum/web3.js/issues/1718
+

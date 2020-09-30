@@ -4,7 +4,7 @@ var mnemonic = "brother drink donor pause enjoy obscure model rough swear toss p
 module.exports = {
   networks: {
     development: {
-      host: "localhost",
+      host: "192.168.2.10",
       port: 8545,
       network_id: "*", // Match any network id
       gas: 5000000

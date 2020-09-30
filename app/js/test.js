@@ -36,11 +36,12 @@ window.addEventListener('load', () => {
     console.log('No web3 instance injected, using Local web3.');
     return web3;
   }
-  
+
 	//initializeWeb3();
 	startApp();
+	//displayInformation
 	getMetamask();
-  
+
 });
 
 function startApp() {
@@ -49,11 +50,11 @@ function startApp() {
 }
 
 //https://cryptozombies.io/en/lesson/6/chapter/2
-function initializeWeb3() {
-	//rinkeby test service.
-	//web3 = new Web3(new Web3.providers.WebsocketProvider("wss://rinkeby.infura.io/ws/v3/84e023c064b1458eaedc358be5c8677a"));
-	window.web3 = new Web3(window.ethereum);	
-}
+// function initializeWeb3() {
+// 	//rinkeby test service.
+// 	//web3 = new Web3(new Web3.providers.WebsocketProvider("wss://rinkeby.infura.io/ws/v3/84e023c064b1458eaedc358be5c8677a"));
+// 	window.web3 = new Web3(window.ethereum);
+// }
 
 function getMetamask() {
 	//Later uses this is to refresh
@@ -64,27 +65,42 @@ function getMetamask() {
 		userAccount = tempAccount;
 	  }
 	}, 10000);*/
-	
-	var promise = web3.eth.getAccounts();
-	var userAccount = promise.then( (val) => displayInformation(val));
-	
 	//return accountInterval;
-	return userAccount;
+
+	var promise = web3.eth.getAccounts();
+	userAccount = promise.then( (val) => displayInformation(val));
+}
+
+//TODO CHANGE NAME
+ function getWaifuToken(val) {
+	var myJson;
+
+	var account = async () => {
+		const response = await fetch("http://localhost:3000/test?account=" + val);
+		myJson = await response.json().then(function(val){
+			console.log(val);
+		});
+		console.log("REPSONE IS ======="+ response) ;console.log(response);
+		return myJson;
+	}
+	 account();
 }
 
 function displayInformation(val) {
-	var Waifu_token_text;
-	var promise;
-	
 	document.getElementById('account_owner').innerHTML = "Account owner " + val;
-	
-	promise = smart_contract.methods.name().call();
+
+	var response = getWaifuToken(val);
+
+//	document.getElementById('contract_name').innerHTML = response.name;
+//	document.getElementById('contract_amount').innerHTML = (`(${response.symbol}) ${response.amount}`);
+
+	/*promise = smart_contract.methods.name().call();
 	promise.then( (val) => Waifu_token_text = val + " ");
 
 	promise = smart_contract.methods.symbol().call();
 	promise.then( (val1) => document.getElementById('contract_name').innerHTML = Waifu_token_text + val1);
-	
+
 	promise = smart_contract.methods.balanceOf(val[0]).call();
-	promise.then( (val1) => document.getElementById('contract_amount').innerHTML = Waifu_token_text + val1);
-	
+	promise.then( (val1) => document.getElementById('contract_amount').innerHTML = Waifu_token_text + val1);*/
+
 }

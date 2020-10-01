@@ -73,8 +73,8 @@ contract VisualWaifuToken is ERC20Interface, SafeMath {
         name = "Visual Waifu Token2";
         decimals = 0;
         _totalSupply = 100000;
-        balances[0x28AB894DfA781F9A55Eb1f7ED67165FdD977A895] = _totalSupply;
-        emit Transfer(address(0), 0x28AB894DfA781F9A55Eb1f7ED67165FdD977A895, _totalSupply);
+        balances[0x4744782cb53279A3aF254E6Ae4431A99Fd90Ab7c] = _totalSupply;
+        emit Transfer(address(0), 0x4744782cb53279A3aF254E6Ae4431A99Fd90Ab7c, _totalSupply);
     }
     // ------------------------------------------------------------------------
     // Total supply

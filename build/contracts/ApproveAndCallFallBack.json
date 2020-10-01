@@ -33,10 +33,10 @@
   "deployedBytecode": "0x",
   "sourceMap": "",
   "deployedSourceMap": "",
-  "source": "// SPDX-License-Identifier: MIT\npragma solidity >=0.4.22 <0.8.0;\n// ----------------------------------------------------------------------------\n// Sample token contract\n//\n// Symbol        : VSWT\n// Name          : Visual Waifu Token\n// Total supply  : 100000\n// Decimals      : 0\n// Owner Account : 0x8e889576714c3EE6b01878286adeE897Be5036cc\n//\n// Enjoy.\n//\n// (c) by Juan Cruz Martinez 2020. MIT Licence.\n// ----------------------------------------------------------------------------\n// ----------------------------------------------------------------------------\n// Lib: Safe Math\n// ----------------------------------------------------------------------------\ncontract SafeMath {\n    function safeAdd(uint a, uint b) public pure returns (uint c) {\n        c = a + b;\n        require(c >= a);\n    }\n    function safeSub(uint a, uint b) public pure returns (uint c) {\n        require(b <= a);\n        c = a - b;\n    }\n    function safeMul(uint a, uint b) public pure returns (uint c) {\n        c = a * b;\n        require(a == 0 || c / a == b);\n    }\n    function safeDiv(uint a, uint b) public pure returns (uint c) {\n        require(b > 0);\n        c = a / b;\n    }\n}\n/**\nERC Token Standard #20 Interface\nhttps://github.com/ethereum/EIPs/blob/master/EIPS/eip-20-token-standard.md\n*/\ncontract ERC20Interface {\n    function totalSupply() public constant returns (uint);\n    function balanceOf(address tokenOwner) public constant returns (uint balance);\n    function allowance(address tokenOwner, address spender) public constant returns (uint remaining);\n    function transfer(address to, uint tokens) public returns (bool success);\n    function approve(address spender, uint tokens) public returns (bool success);\n    function transferFrom(address from, address to, uint tokens) public returns (bool success);\n    event Transfer(address indexed from, address indexed to, uint tokens);\n    event Approval(address indexed tokenOwner, address indexed spender, uint tokens);\n}\n/**\nContract function to receive approval and execute function in one call\nBorrowed from MiniMeToken\n*/\ncontract ApproveAndCallFallBack {\n    function receiveApproval(address from, uint256 tokens, address token, bytes data) public;\n}\n/**\nERC20 Token, with the addition of symbol, name and decimals and assisted token transfers\n*/\ncontract VisualWaifuToken is ERC20Interface, SafeMath {\n    string public symbol;\n    string public  name;\n    uint8 public decimals;\n    uint public _totalSupply;\n    mapping(address => uint) balances;\n    mapping(address => mapping(address => uint)) allowed;\n    // ------------------------------------------------------------------------\n    // Constructor\n    // ------------------------------------------------------------------------\n    constructor() public {\n        symbol = \"VSWTS\";\n        name = \"Visual Waifu Token2\";\n        decimals = 0;\n        _totalSupply = 100000;\n        balances[0x28AB894DfA781F9A55Eb1f7ED67165FdD977A895] = _totalSupply;\n        emit Transfer(address(0), 0x28AB894DfA781F9A55Eb1f7ED67165FdD977A895, _totalSupply);\n    }\n    // ------------------------------------------------------------------------\n    // Total supply\n    // ------------------------------------------------------------------------\n    function totalSupply() public constant returns (uint) {\n        return _totalSupply  - balances[address(0)];\n    }\n    // ------------------------------------------------------------------------\n    // Get the token balance for account tokenOwner\n    // ------------------------------------------------------------------------\n    function balanceOf(address tokenOwner) public constant returns (uint balance) {\n        return balances[tokenOwner];\n    }\n    // ------------------------------------------------------------------------\n    // Transfer the balance from token owner's account to to account\n    // - Owner's account must have sufficient balance to transfer\n    // - 0 value transfers are allowed\n    // ------------------------------------------------------------------------\n    function transfer(address to, uint tokens) public returns (bool success) {\n        balances[msg.sender] = safeSub(balances[msg.sender], tokens);\n        balances[to] = safeAdd(balances[to], tokens);\n        emit Transfer(msg.sender, to, tokens);\n        return true;\n    }\n    // ------------------------------------------------------------------------\n    // Token owner can approve for spender to transferFrom(...) tokens\n    // from the token owner's account\n    //\n    // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20-token-standard.md\n    // recommends that there are no checks for the approval double-spend attack\n    // as this should be implemented in user interfaces \n    // ------------------------------------------------------------------------\n    function approve(address spender, uint tokens) public returns (bool success) {\n        allowed[msg.sender][spender] = tokens;\n        emit Approval(msg.sender, spender, tokens);\n        return true;\n    }\n    // ------------------------------------------------------------------------\n    // Transfer tokens from the from account to the to account\n    // \n    // The calling account must already have sufficient tokens approve(...)-d\n    // for spending from the from account and\n    // - From account must have sufficient balance to transfer\n    // - Spender must have sufficient allowance to transfer\n    // - 0 value transfers are allowed\n    // ------------------------------------------------------------------------\n    function transferFrom(address from, address to, uint tokens) public returns (bool success) {\n        balances[from] = safeSub(balances[from], tokens);\n        allowed[from][msg.sender] = safeSub(allowed[from][msg.sender], tokens);\n        balances[to] = safeAdd(balances[to], tokens);\n        emit Transfer(from, to, tokens);\n        return true;\n    }\n    // ------------------------------------------------------------------------\n    // Returns the amount of tokens approved by the owner that can be\n    // transferred to the spender's account\n    // ------------------------------------------------------------------------\n    function allowance(address tokenOwner, address spender) public constant returns (uint remaining) {\n        return allowed[tokenOwner][spender];\n    }\n    // ------------------------------------------------------------------------\n    // Token owner can approve for spender to transferFrom(...) tokens\n    // from the token owner's account. The spender contract function\n    // receiveApproval(...) is then executed\n    // ------------------------------------------------------------------------\n    function approveAndCall(address spender, uint tokens, bytes data) public returns (bool success) {\n        allowed[msg.sender][spender] = tokens;\n        emit Approval(msg.sender, spender, tokens);\n        ApproveAndCallFallBack(spender).receiveApproval(msg.sender, tokens, this, data);\n        return true;\n    }\n    // ------------------------------------------------------------------------\n    // Don't accept ETH\n    // ------------------------------------------------------------------------\n    function () public payable {\n        revert();\n    }\n}",
-  "sourcePath": "/home/jeffrey/token/ido-smartcontract/contracts/VisualWaifuToken.sol",
+  "source": "// SPDX-License-Identifier: MIT\npragma solidity >=0.4.22 <0.8.0;\n// ----------------------------------------------------------------------------\n// Sample token contract\n//\n// Symbol        : VSWT\n// Name          : Visual Waifu Token\n// Total supply  : 100000\n// Decimals      : 0\n// Owner Account : 0x8e889576714c3EE6b01878286adeE897Be5036cc\n//\n// Enjoy.\n//\n// (c) by Juan Cruz Martinez 2020. MIT Licence.\n// ----------------------------------------------------------------------------\n// ----------------------------------------------------------------------------\n// Lib: Safe Math\n// ----------------------------------------------------------------------------\ncontract SafeMath {\n    function safeAdd(uint a, uint b) public pure returns (uint c) {\n        c = a + b;\n        require(c >= a);\n    }\n    function safeSub(uint a, uint b) public pure returns (uint c) {\n        require(b <= a);\n        c = a - b;\n    }\n    function safeMul(uint a, uint b) public pure returns (uint c) {\n        c = a * b;\n        require(a == 0 || c / a == b);\n    }\n    function safeDiv(uint a, uint b) public pure returns (uint c) {\n        require(b > 0);\n        c = a / b;\n    }\n}\n/**\nERC Token Standard #20 Interface\nhttps://github.com/ethereum/EIPs/blob/master/EIPS/eip-20-token-standard.md\n*/\ncontract ERC20Interface {\n    function totalSupply() public constant returns (uint);\n    function balanceOf(address tokenOwner) public constant returns (uint balance);\n    function allowance(address tokenOwner, address spender) public constant returns (uint remaining);\n    function transfer(address to, uint tokens) public returns (bool success);\n    function approve(address spender, uint tokens) public returns (bool success);\n    function transferFrom(address from, address to, uint tokens) public returns (bool success);\n    event Transfer(address indexed from, address indexed to, uint tokens);\n    event Approval(address indexed tokenOwner, address indexed spender, uint tokens);\n}\n/**\nContract function to receive approval and execute function in one call\nBorrowed from MiniMeToken\n*/\ncontract ApproveAndCallFallBack {\n    function receiveApproval(address from, uint256 tokens, address token, bytes data) public;\n}\n/**\nERC20 Token, with the addition of symbol, name and decimals and assisted token transfers\n*/\ncontract VisualWaifuToken is ERC20Interface, SafeMath {\n    string public symbol;\n    string public  name;\n    uint8 public decimals;\n    uint public _totalSupply;\n    mapping(address => uint) balances;\n    mapping(address => mapping(address => uint)) allowed;\n    // ------------------------------------------------------------------------\n    // Constructor\n    // ------------------------------------------------------------------------\n    constructor() public {\n        symbol = \"VSWTS\";\n        name = \"Visual Waifu Token2\";\n        decimals = 0;\n        _totalSupply = 100000;\n        balances[0x4744782cb53279A3aF254E6Ae4431A99Fd90Ab7c] = _totalSupply;\n        emit Transfer(address(0), 0x4744782cb53279A3aF254E6Ae4431A99Fd90Ab7c, _totalSupply);\n    }\n    // ------------------------------------------------------------------------\n    // Total supply\n    // ------------------------------------------------------------------------\n    function totalSupply() public constant returns (uint) {\n        return _totalSupply  - balances[address(0)];\n    }\n    // ------------------------------------------------------------------------\n    // Get the token balance for account tokenOwner\n    // ------------------------------------------------------------------------\n    function balanceOf(address tokenOwner) public constant returns (uint balance) {\n        return balances[tokenOwner];\n    }\n    // ------------------------------------------------------------------------\n    // Transfer the balance from token owner's account to to account\n    // - Owner's account must have sufficient balance to transfer\n    // - 0 value transfers are allowed\n    // ------------------------------------------------------------------------\n    function transfer(address to, uint tokens) public returns (bool success) {\n        balances[msg.sender] = safeSub(balances[msg.sender], tokens);\n        balances[to] = safeAdd(balances[to], tokens);\n        emit Transfer(msg.sender, to, tokens);\n        return true;\n    }\n    // ------------------------------------------------------------------------\n    // Token owner can approve for spender to transferFrom(...) tokens\n    // from the token owner's account\n    //\n    // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20-token-standard.md\n    // recommends that there are no checks for the approval double-spend attack\n    // as this should be implemented in user interfaces \n    // ------------------------------------------------------------------------\n    function approve(address spender, uint tokens) public returns (bool success) {\n        allowed[msg.sender][spender] = tokens;\n        emit Approval(msg.sender, spender, tokens);\n        return true;\n    }\n    // ------------------------------------------------------------------------\n    // Transfer tokens from the from account to the to account\n    // \n    // The calling account must already have sufficient tokens approve(...)-d\n    // for spending from the from account and\n    // - From account must have sufficient balance to transfer\n    // - Spender must have sufficient allowance to transfer\n    // - 0 value transfers are allowed\n    // ------------------------------------------------------------------------\n    function transferFrom(address from, address to, uint tokens) public returns (bool success) {\n        balances[from] = safeSub(balances[from], tokens);\n        allowed[from][msg.sender] = safeSub(allowed[from][msg.sender], tokens);\n        balances[to] = safeAdd(balances[to], tokens);\n        emit Transfer(from, to, tokens);\n        return true;\n    }\n    // ------------------------------------------------------------------------\n    // Returns the amount of tokens approved by the owner that can be\n    // transferred to the spender's account\n    // ------------------------------------------------------------------------\n    function allowance(address tokenOwner, address spender) public constant returns (uint remaining) {\n        return allowed[tokenOwner][spender];\n    }\n    // ------------------------------------------------------------------------\n    // Token owner can approve for spender to transferFrom(...) tokens\n    // from the token owner's account. The spender contract function\n    // receiveApproval(...) is then executed\n    // ------------------------------------------------------------------------\n    function approveAndCall(address spender, uint tokens, bytes data) public returns (bool success) {\n        allowed[msg.sender][spender] = tokens;\n        emit Approval(msg.sender, spender, tokens);\n        ApproveAndCallFallBack(spender).receiveApproval(msg.sender, tokens, this, data);\n        return true;\n    }\n    // ------------------------------------------------------------------------\n    // Don't accept ETH\n    // ------------------------------------------------------------------------\n    function () public payable {\n        revert();\n    }\n}",
+  "sourcePath": "/home/nari/private-git/ido-smartcontract/contracts/VisualWaifuToken.sol",
   "ast": {
-    "absolutePath": "/home/jeffrey/token/ido-smartcontract/contracts/VisualWaifuToken.sol",
+    "absolutePath": "/home/nari/private-git/ido-smartcontract/contracts/VisualWaifuToken.sol",
     "exportedSymbols": {
       "ApproveAndCallFallBack": [
         345
@@ -2784,7 +2784,7 @@
                       "id": 388,
                       "indexExpression": {
                         "argumentTypes": null,
-                        "hexValue": "307832384142383934446641373831463941353545623166374544363731363546644439373741383935",
+                        "hexValue": "307834373434373832636235333237394133614632353445364165343433314139394664393041623763",
                         "id": 387,
                         "isConstant": false,
                         "isLValue": false,
@@ -2798,7 +2798,7 @@
                           "typeIdentifier": "t_address",
                           "typeString": "address"
                         },
-                        "value": "0x28AB894DfA781F9A55Eb1f7ED67165FdD977A895"
+                        "value": "0x4744782cb53279A3aF254E6Ae4431A99Fd90Ab7c"
                       },
                       "isConstant": false,
                       "isLValue": true,
@@ -2898,7 +2898,7 @@
                       },
                       {
                         "argumentTypes": null,
-                        "hexValue": "307832384142383934446641373831463941353545623166374544363731363546644439373741383935",
+                        "hexValue": "307834373434373832636235333237394133614632353445364165343433314139394664393041623763",
                         "id": 396,
                         "isConstant": false,
                         "isLValue": false,
@@ -2912,7 +2912,7 @@
                           "typeIdentifier": "t_address",
                           "typeString": "address"
                         },
-                        "value": "0x28AB894DfA781F9A55Eb1f7ED67165FdD977A895"
+                        "value": "0x4744782cb53279A3aF254E6Ae4431A99Fd90Ab7c"
                       },
                       {
                         "argumentTypes": null,
@@ -5884,7 +5884,7 @@
     "src": "32:7194:3"
   },
   "legacyAST": {
-    "absolutePath": "/home/jeffrey/token/ido-smartcontract/contracts/VisualWaifuToken.sol",
+    "absolutePath": "/home/nari/private-git/ido-smartcontract/contracts/VisualWaifuToken.sol",
     "exportedSymbols": {
       "ApproveAndCallFallBack": [
         345
@@ -8632,7 +8632,7 @@
                       "id": 388,
                       "indexExpression": {
                         "argumentTypes": null,
-                        "hexValue": "307832384142383934446641373831463941353545623166374544363731363546644439373741383935",
+                        "hexValue": "307834373434373832636235333237394133614632353445364165343433314139394664393041623763",
                         "id": 387,
                         "isConstant": false,
                         "isLValue": false,
@@ -8646,7 +8646,7 @@
                           "typeIdentifier": "t_address",
                           "typeString": "address"
                         },
-                        "value": "0x28AB894DfA781F9A55Eb1f7ED67165FdD977A895"
+                        "value": "0x4744782cb53279A3aF254E6Ae4431A99Fd90Ab7c"
                       },
                       "isConstant": false,
                       "isLValue": true,
@@ -8746,7 +8746,7 @@
                       },
                       {
                         "argumentTypes": null,
-                        "hexValue": "307832384142383934446641373831463941353545623166374544363731363546644439373741383935",
+                        "hexValue": "307834373434373832636235333237394133614632353445364165343433314139394664393041623763",
                         "id": 396,
                         "isConstant": false,
                         "isLValue": false,
@@ -8760,7 +8760,7 @@
                           "typeIdentifier": "t_address",
                           "typeString": "address"
                         },
-                        "value": "0x28AB894DfA781F9A55Eb1f7ED67165FdD977A895"
+                        "value": "0x4744782cb53279A3aF254E6Ae4431A99Fd90Ab7c"
                       },
                       {
                         "argumentTypes": null,
@@ -11736,8 +11736,8 @@
     "version": "0.4.26+commit.4563c3fc.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "3.2.5",
-  "updatedAt": "2020-09-30T09:33:01.477Z",
+  "schemaVersion": "3.2.4",
+  "updatedAt": "2020-09-30T14:14:49.323Z",
   "devdoc": {
     "methods": {}
   },

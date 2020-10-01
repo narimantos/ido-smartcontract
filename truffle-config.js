@@ -4,10 +4,16 @@ var mnemonic = "brother drink donor pause enjoy obscure model rough swear toss p
 module.exports = {
   networks: {
     development: {
-      host: "localhost",
+      host: "192.168.178.29",
       port: 8545,
       network_id: "*", // Match any network id
       gas: 5000000
+    },
+    dev2: {
+      host: "localhost",
+      port: 8545,
+      network_id: "*", // Match any network id
+      gas: 5000000      
     },
     rinkeby: {
       provider: function(){

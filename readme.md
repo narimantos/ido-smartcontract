@@ -10,3 +10,6 @@ https://medium.com/@awantoch/how-to-connect-web3-js-to-metamask-in-2020-fee2b2ed
 https://ethereum.stackexchange.com/questions/82073/window-ethereum
 https://github.com/ethereum/web3.js/issues/1718
 
+https://futurestud.io/tutorials/how-to-fix-promise-resolver-undefined-is-not-a-function-in-node-js-or-javascript
+https://web.dev/promises/
+https://ethereum.stackexchange.com/questions/64575/out-of-gas-error-for-a-view-function

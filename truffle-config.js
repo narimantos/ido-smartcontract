@@ -4,7 +4,7 @@ var mnemonic = "brother drink donor pause enjoy obscure model rough swear toss p
 module.exports = {
   networks: {
     development: {
-      host: "192.168.2.10",
+      host: "192.168.178.29",
       port: 8545,
       network_id: "*", // Match any network id
       gas: 5000000
@@ -20,7 +20,7 @@ module.exports = {
   },
   compilers: { 
     solc: {
-      version: "0.6.12",
+      version: "0.4.26",
       settings: {
         optimizer: {
           enabled: true, // Default: false

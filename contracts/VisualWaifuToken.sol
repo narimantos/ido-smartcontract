@@ -16,7 +16,7 @@ pragma solidity >=0.4.22 <0.8.0;
 // ----------------------------------------------------------------------------
 // Lib: Safe Math
 // ----------------------------------------------------------------------------
-contract SafeMath {
+contract SafeMath2 {
     function safeAdd(uint a, uint b) public pure returns (uint c) {
         c = a + b;
         require(c >= a);
@@ -58,7 +58,7 @@ contract ApproveAndCallFallBack {
 /**
 ERC20 Token, with the addition of symbol, name and decimals and assisted token transfers
 */
-contract VisualWaifuToken is ERC20Interface, SafeMath {
+contract VisualWaifuToken is ERC20Interface, SafeMath2 {
     string public symbol;
     string public  name;
     uint8 public decimals;
@@ -70,12 +70,15 @@ contract VisualWaifuToken is ERC20Interface, SafeMath {
     // ------------------------------------------------------------------------
     constructor() public {
         symbol = "VSWTS";
-        name = "Visual Waifu Token2";
+        name = "Visual Waifu Token";
         decimals = 0;
-        _totalSupply = 100000;
-        balances[0x4744782cb53279A3aF254E6Ae4431A99Fd90Ab7c] = _totalSupply;
-        emit Transfer(address(0), 0x4744782cb53279A3aF254E6Ae4431A99Fd90Ab7c, _totalSupply);
+        _totalSupply = 1000;
+        balances[0x28AB894DfA781F9A55Eb1f7ED67165FdD977A895] = _totalSupply;
+        emit Transfer(address(0), 0x28AB894DfA781F9A55Eb1f7ED67165FdD977A895, _totalSupply);
     }
+
+  
+
     // ------------------------------------------------------------------------
     // Total supply
     // ------------------------------------------------------------------------

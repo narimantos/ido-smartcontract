@@ -1,38 +1,104 @@
 {
-  "contractName": "ApproveAndCallFallBack",
+  "contractName": "SafeMath2",
   "abi": [
     {
-      "constant": false,
+      "constant": true,
       "inputs": [
         {
-          "name": "from",
-          "type": "address"
-        },
-        {
-          "name": "tokens",
+          "name": "a",
           "type": "uint256"
         },
         {
-          "name": "token",
-          "type": "address"
-        },
-        {
-          "name": "data",
-          "type": "bytes"
+          "name": "b",
+          "type": "uint256"
         }
       ],
-      "name": "receiveApproval",
-      "outputs": [],
+      "name": "safeAdd",
+      "outputs": [
+        {
+          "name": "c",
+          "type": "uint256"
+        }
+      ],
       "payable": false,
-      "stateMutability": "nonpayable",
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "a",
+          "type": "uint256"
+        },
+        {
+          "name": "b",
+          "type": "uint256"
+        }
+      ],
+      "name": "safeSub",
+      "outputs": [
+        {
+          "name": "c",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "a",
+          "type": "uint256"
+        },
+        {
+          "name": "b",
+          "type": "uint256"
+        }
+      ],
+      "name": "safeMul",
+      "outputs": [
+        {
+          "name": "c",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "a",
+          "type": "uint256"
+        },
+        {
+          "name": "b",
+          "type": "uint256"
+        }
+      ],
+      "name": "safeDiv",
+      "outputs": [
+        {
+          "name": "c",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "pure",
       "type": "function"
     }
   ],
-  "metadata": "",
-  "bytecode": "0x",
-  "deployedBytecode": "0x",
-  "sourceMap": "",
-  "deployedSourceMap": "",
+  "metadata": "{\"compiler\":{\"version\":\"0.4.26+commit.4563c3fc\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":true,\"inputs\":[{\"name\":\"a\",\"type\":\"uint256\"},{\"name\":\"b\",\"type\":\"uint256\"}],\"name\":\"safeSub\",\"outputs\":[{\"name\":\"c\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"pure\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"a\",\"type\":\"uint256\"},{\"name\":\"b\",\"type\":\"uint256\"}],\"name\":\"safeDiv\",\"outputs\":[{\"name\":\"c\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"pure\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"a\",\"type\":\"uint256\"},{\"name\":\"b\",\"type\":\"uint256\"}],\"name\":\"safeMul\",\"outputs\":[{\"name\":\"c\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"pure\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"a\",\"type\":\"uint256\"},{\"name\":\"b\",\"type\":\"uint256\"}],\"name\":\"safeAdd\",\"outputs\":[{\"name\":\"c\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/home/jeffrey/token/ido-smartcontract/contracts/VisualWaifuToken.sol\":\"SafeMath2\"},\"evmVersion\":\"byzantium\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/home/jeffrey/token/ido-smartcontract/contracts/VisualWaifuToken.sol\":{\"keccak256\":\"0x31fb8e0b974be1837c9bbac6872577d08d6dbb1fe3ba2ae9b084d6c8325df1d8\",\"urls\":[\"bzzr://f1266653f9150b3a49ee04e62782d6f4d1d2a5f414fd7948c22fd7dc24bcd16a\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b50610181806100206000396000f3006080604052600436106100615763ffffffff7c0100000000000000000000000000000000000000000000000000000000600035041663a293d1e88114610066578063b5931f7c14610093578063d05c78da146100ae578063e6cb9013146100c9575b600080fd5b34801561007257600080fd5b506100816004356024356100e4565b60408051918252519081900360200190f35b34801561009f57600080fd5b506100816004356024356100f9565b3480156100ba57600080fd5b5061008160043560243561011a565b3480156100d557600080fd5b50610081600435602435610145565b6000828211156100f357600080fd5b50900390565b600080821161010757600080fd5b818381151561011257fe5b049392505050565b818102821580610134575081838281151561013157fe5b04145b151561013f57600080fd5b92915050565b8181018281101561013f57600080fd00a165627a7a72305820e0047531a91cf393545006e923977cbfa1afa079dd99105d75ef61ff56e00bc00029",
+  "deployedBytecode": "0x6080604052600436106100615763ffffffff7c0100000000000000000000000000000000000000000000000000000000600035041663a293d1e88114610066578063b5931f7c14610093578063d05c78da146100ae578063e6cb9013146100c9575b600080fd5b34801561007257600080fd5b506100816004356024356100e4565b60408051918252519081900360200190f35b34801561009f57600080fd5b506100816004356024356100f9565b3480156100ba57600080fd5b5061008160043560243561011a565b3480156100d557600080fd5b50610081600435602435610145565b6000828211156100f357600080fd5b50900390565b600080821161010757600080fd5b818381151561011257fe5b049392505050565b818102821580610134575081838281151561013157fe5b04145b151561013f57600080fd5b92915050565b8181018281101561013f57600080fd00a165627a7a72305820e0047531a91cf393545006e923977cbfa1afa079dd99105d75ef61ff56e00bc00029",
+  "sourceMap": "666:507:3:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;666:507:3;;;;;;;",
+  "deployedSourceMap": "666:507:3:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;809:113;;8:9:-1;5:2;;;30:1;27;20:12;5:2;-1:-1;809:113:3;;;;;;;;;;;;;;;;;;;;;;;1059:112;;8:9:-1;5:2;;;30:1;27;20:12;5:2;-1:-1;1059:112:3;;;;;;;927:127;;8:9:-1;5:2;;;30:1;27;20:12;5:2;-1:-1;927:127:3;;;;;;;691:113;;8:9:-1;5:2;;;30:1;27;20:12;5:2;-1:-1;691:113:3;;;;;;;809;863:6;889;;;;881:15;;;;;;-1:-1:-1;910:5:3;;;809:113::o;1059:112::-;1113:6;1139:5;;;1131:14;;;;;;1163:1;1159;:5;;;;;;;;;1059:112;-1:-1:-1;;;1059:112:3:o;927:127::-;1003:5;;;1026:6;;;:20;;;1045:1;1040;1036;:5;;;;;;;;:10;1026:20;1018:29;;;;;;;;927:127;;;;:::o;691:113::-;767:5;;;790:6;;;;782:15;;;;",
   "source": "// SPDX-License-Identifier: MIT\npragma solidity >=0.4.22 <0.8.0;\n// ----------------------------------------------------------------------------\n// Sample token contract\n//\n// Symbol        : VSWT\n// Name          : Visual Waifu Token\n// Total supply  : 100000\n// Decimals      : 0\n// Owner Account : 0x8e889576714c3EE6b01878286adeE897Be5036cc\n//\n// Enjoy.\n//\n// (c) by Juan Cruz Martinez 2020. MIT Licence.\n// ----------------------------------------------------------------------------\n// ----------------------------------------------------------------------------\n// Lib: Safe Math\n// ----------------------------------------------------------------------------\ncontract SafeMath2 {\n    function safeAdd(uint a, uint b) public pure returns (uint c) {\n        c = a + b;\n        require(c >= a);\n    }\n    function safeSub(uint a, uint b) public pure returns (uint c) {\n        require(b <= a);\n        c = a - b;\n    }\n    function safeMul(uint a, uint b) public pure returns (uint c) {\n        c = a * b;\n        require(a == 0 || c / a == b);\n    }\n    function safeDiv(uint a, uint b) public pure returns (uint c) {\n        require(b > 0);\n        c = a / b;\n    }\n}\n/**\nERC Token Standard #20 Interface\nhttps://github.com/ethereum/EIPs/blob/master/EIPS/eip-20-token-standard.md\n*/\ncontract ERC20Interface {\n    function totalSupply() public constant returns (uint);\n    function balanceOf(address tokenOwner) public constant returns (uint balance);\n    function allowance(address tokenOwner, address spender) public constant returns (uint remaining);\n    function transfer(address to, uint tokens) public returns (bool success);\n    function approve(address spender, uint tokens) public returns (bool success);\n    function transferFrom(address from, address to, uint tokens) public returns (bool success);\n    event Transfer(address indexed from, address indexed to, uint tokens);\n    event Approval(address indexed tokenOwner, address indexed spender, uint tokens);\n}\n/**\nContract function to receive approval and execute function in one call\nBorrowed from MiniMeToken\n*/\ncontract ApproveAndCallFallBack {\n    function receiveApproval(address from, uint256 tokens, address token, bytes data) public;\n}\n/**\nERC20 Token, with the addition of symbol, name and decimals and assisted token transfers\n*/\ncontract VisualWaifuToken is ERC20Interface, SafeMath2 {\n    string public symbol;\n    string public  name;\n    uint8 public decimals;\n    uint public _totalSupply;\n    mapping(address => uint) balances;\n    mapping(address => mapping(address => uint)) allowed;\n    // ------------------------------------------------------------------------\n    // Constructor\n    // ------------------------------------------------------------------------\n    constructor() public {\n        symbol = \"VSWTS\";\n        name = \"Visual Waifu Token\";\n        decimals = 0;\n        _totalSupply = 1000;\n        balances[0x28AB894DfA781F9A55Eb1f7ED67165FdD977A895] = _totalSupply;\n        emit Transfer(address(0), 0x28AB894DfA781F9A55Eb1f7ED67165FdD977A895, _totalSupply);\n    }\n\n  \n\n    // ------------------------------------------------------------------------\n    // Total supply\n    // ------------------------------------------------------------------------\n    function totalSupply() public constant returns (uint) {\n        return _totalSupply  - balances[address(0)];\n    }\n    // ------------------------------------------------------------------------\n    // Get the token balance for account tokenOwner\n    // ------------------------------------------------------------------------\n    function balanceOf(address tokenOwner) public constant returns (uint balance) {\n        return balances[tokenOwner];\n    }\n    // ------------------------------------------------------------------------\n    // Transfer the balance from token owner's account to to account\n    // - Owner's account must have sufficient balance to transfer\n    // - 0 value transfers are allowed\n    // ------------------------------------------------------------------------\n    function transfer(address to, uint tokens) public returns (bool success) {\n        balances[msg.sender] = safeSub(balances[msg.sender], tokens);\n        balances[to] = safeAdd(balances[to], tokens);\n        emit Transfer(msg.sender, to, tokens);\n        return true;\n    }\n    // ------------------------------------------------------------------------\n    // Token owner can approve for spender to transferFrom(...) tokens\n    // from the token owner's account\n    //\n    // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20-token-standard.md\n    // recommends that there are no checks for the approval double-spend attack\n    // as this should be implemented in user interfaces \n    // ------------------------------------------------------------------------\n    function approve(address spender, uint tokens) public returns (bool success) {\n        allowed[msg.sender][spender] = tokens;\n        emit Approval(msg.sender, spender, tokens);\n        return true;\n    }\n    // ------------------------------------------------------------------------\n    // Transfer tokens from the from account to the to account\n    // \n    // The calling account must already have sufficient tokens approve(...)-d\n    // for spending from the from account and\n    // - From account must have sufficient balance to transfer\n    // - Spender must have sufficient allowance to transfer\n    // - 0 value transfers are allowed\n    // ------------------------------------------------------------------------\n    function transferFrom(address from, address to, uint tokens) public returns (bool success) {\n        balances[from] = safeSub(balances[from], tokens);\n        allowed[from][msg.sender] = safeSub(allowed[from][msg.sender], tokens);\n        balances[to] = safeAdd(balances[to], tokens);\n        emit Transfer(from, to, tokens);\n        return true;\n    }\n    // ------------------------------------------------------------------------\n    // Returns the amount of tokens approved by the owner that can be\n    // transferred to the spender's account\n    // ------------------------------------------------------------------------\n    function allowance(address tokenOwner, address spender) public constant returns (uint remaining) {\n        return allowed[tokenOwner][spender];\n    }\n    // ------------------------------------------------------------------------\n    // Token owner can approve for spender to transferFrom(...) tokens\n    // from the token owner's account. The spender contract function\n    // receiveApproval(...) is then executed\n    // ------------------------------------------------------------------------\n    function approveAndCall(address spender, uint tokens, bytes data) public returns (bool success) {\n        allowed[msg.sender][spender] = tokens;\n        emit Approval(msg.sender, spender, tokens);\n        ApproveAndCallFallBack(spender).receiveApproval(msg.sender, tokens, this, data);\n        return true;\n    }\n    // ------------------------------------------------------------------------\n    // Don't accept ETH\n    // ------------------------------------------------------------------------\n    function () public payable {\n        revert();\n    }\n}",
   "sourcePath": "/home/jeffrey/token/ido-smartcontract/contracts/VisualWaifuToken.sol",
   "ast": {
@@ -11737,7 +11803,7 @@
   },
   "networks": {},
   "schemaVersion": "3.2.5",
-  "updatedAt": "2020-10-01T15:45:04.228Z",
+  "updatedAt": "2020-10-01T15:45:04.268Z",
   "devdoc": {
     "methods": {}
   },

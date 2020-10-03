@@ -91,15 +91,15 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.4.26+commit.4563c3fc\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":true,\"inputs\":[{\"name\":\"addr\",\"type\":\"address\"}],\"name\":\"getBalanceInEth\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"receiver\",\"type\":\"address\"},{\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"sendCoin\",\"outputs\":[{\"name\":\"sufficient\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"addr\",\"type\":\"address\"}],\"name\":\"getBalance\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"_from\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"_to\",\"type\":\"address\"},{\"indexed\":false,\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/home/jeffrey/token/ido-smartcontract/contracts/MetaCoin.sol\":\"MetaCoin\"},\"evmVersion\":\"byzantium\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/home/jeffrey/token/ido-smartcontract/contracts/ConvertLib.sol\":{\"keccak256\":\"0x10e20a172b452fece152e14fa48ea45568608d7e4a6b44b976a4fbce01a438a4\",\"urls\":[\"bzzr://5ac2aabd5b72b6b954fc858d706e5b22a38b20701115aee4c6f943da6afd2a04\"]},\"/home/jeffrey/token/ido-smartcontract/contracts/MetaCoin.sol\":{\"keccak256\":\"0xeadf70d90e1908c6b105d75d7a9f4840d8c1142fdba5271d7d740bbbc05b32b6\",\"urls\":[\"bzzr://b0a06529f7d2281ca9cd5cf69c80eda6479f64d74b26f380b616c9eed0eb05c3\"]}},\"version\":1}",
-  "bytecode": "0x608060405234801561001057600080fd5b5032600090815260208190526040902061271090556102ab806100346000396000f3006080604052600436106100565763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416637bd703e8811461005b57806390b98a111461009b578063f8b2cb4f146100e0575b600080fd5b34801561006757600080fd5b5061008973ffffffffffffffffffffffffffffffffffffffff6004351661010e565b60408051918252519081900360200190f35b3480156100a757600080fd5b506100cc73ffffffffffffffffffffffffffffffffffffffff600435166024356101be565b604080519115158252519081900360200190f35b3480156100ec57600080fd5b5061008973ffffffffffffffffffffffffffffffffffffffff60043516610257565b600073__ConvertLib____________________________6396e4ee3d61013384610257565b60026040518363ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808381526020018281526020019250505060206040518083038186803b15801561018c57600080fd5b505af41580156101a0573d6000803e3d6000fd5b505050506040513d60208110156101b657600080fd5b505192915050565b336000908152602081905260408120548211156101dd57506000610251565b336000818152602081815260408083208054879003905573ffffffffffffffffffffffffffffffffffffffff871680845292819020805487019055805186815290519293927fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef929181900390910190a35060015b92915050565b73ffffffffffffffffffffffffffffffffffffffff16600090815260208190526040902054905600a165627a7a7230582074a038ceb544c37bd5a06eab6bd14b8d56576eb081d1c54f341cbfcc7dabf4ab0029",
-  "deployedBytecode": "0x6080604052600436106100565763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416637bd703e8811461005b57806390b98a111461009b578063f8b2cb4f146100e0575b600080fd5b34801561006757600080fd5b5061008973ffffffffffffffffffffffffffffffffffffffff6004351661010e565b60408051918252519081900360200190f35b3480156100a757600080fd5b506100cc73ffffffffffffffffffffffffffffffffffffffff600435166024356101be565b604080519115158252519081900360200190f35b3480156100ec57600080fd5b5061008973ffffffffffffffffffffffffffffffffffffffff60043516610257565b600073__ConvertLib____________________________6396e4ee3d61013384610257565b60026040518363ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808381526020018281526020019250505060206040518083038186803b15801561018c57600080fd5b505af41580156101a0573d6000803e3d6000fd5b505050506040513d60208110156101b657600080fd5b505192915050565b336000908152602081905260408120548211156101dd57506000610251565b336000818152602081815260408083208054879003905573ffffffffffffffffffffffffffffffffffffffff871680845292819020805487019055805186815290519293927fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef929181900390910190a35060015b92915050565b73ffffffffffffffffffffffffffffffffffffffff16600090815260208190526040902054905600a165627a7a7230582074a038ceb544c37bd5a06eab6bd14b8d56576eb081d1c54f341cbfcc7dabf4ab0029",
+  "metadata": "{\"compiler\":{\"version\":\"0.4.26+commit.4563c3fc\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":true,\"inputs\":[{\"name\":\"addr\",\"type\":\"address\"}],\"name\":\"getBalanceInEth\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"receiver\",\"type\":\"address\"},{\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"sendCoin\",\"outputs\":[{\"name\":\"sufficient\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"addr\",\"type\":\"address\"}],\"name\":\"getBalance\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"_from\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"_to\",\"type\":\"address\"},{\"indexed\":false,\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/home/nari/private-git/ido-smartcontract/contracts/MetaCoin.sol\":\"MetaCoin\"},\"evmVersion\":\"byzantium\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/home/nari/private-git/ido-smartcontract/contracts/ConvertLib.sol\":{\"keccak256\":\"0x10e20a172b452fece152e14fa48ea45568608d7e4a6b44b976a4fbce01a438a4\",\"urls\":[\"bzzr://5ac2aabd5b72b6b954fc858d706e5b22a38b20701115aee4c6f943da6afd2a04\"]},\"/home/nari/private-git/ido-smartcontract/contracts/MetaCoin.sol\":{\"keccak256\":\"0xeadf70d90e1908c6b105d75d7a9f4840d8c1142fdba5271d7d740bbbc05b32b6\",\"urls\":[\"bzzr://b0a06529f7d2281ca9cd5cf69c80eda6479f64d74b26f380b616c9eed0eb05c3\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b5032600090815260208190526040902061271090556102ab806100346000396000f3006080604052600436106100565763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416637bd703e8811461005b57806390b98a111461009b578063f8b2cb4f146100e0575b600080fd5b34801561006757600080fd5b5061008973ffffffffffffffffffffffffffffffffffffffff6004351661010e565b60408051918252519081900360200190f35b3480156100a757600080fd5b506100cc73ffffffffffffffffffffffffffffffffffffffff600435166024356101be565b604080519115158252519081900360200190f35b3480156100ec57600080fd5b5061008973ffffffffffffffffffffffffffffffffffffffff60043516610257565b600073__ConvertLib____________________________6396e4ee3d61013384610257565b60026040518363ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808381526020018281526020019250505060206040518083038186803b15801561018c57600080fd5b505af41580156101a0573d6000803e3d6000fd5b505050506040513d60208110156101b657600080fd5b505192915050565b336000908152602081905260408120548211156101dd57506000610251565b336000818152602081815260408083208054879003905573ffffffffffffffffffffffffffffffffffffffff871680845292819020805487019055805186815290519293927fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef929181900390910190a35060015b92915050565b73ffffffffffffffffffffffffffffffffffffffff16600090815260208190526040902054905600a165627a7a72305820bcb4fadf1039a7fe8042582a00a2ab59ea28402c0500a371d8337b6928f4c2b80029",
+  "deployedBytecode": "0x6080604052600436106100565763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416637bd703e8811461005b57806390b98a111461009b578063f8b2cb4f146100e0575b600080fd5b34801561006757600080fd5b5061008973ffffffffffffffffffffffffffffffffffffffff6004351661010e565b60408051918252519081900360200190f35b3480156100a757600080fd5b506100cc73ffffffffffffffffffffffffffffffffffffffff600435166024356101be565b604080519115158252519081900360200190f35b3480156100ec57600080fd5b5061008973ffffffffffffffffffffffffffffffffffffffff60043516610257565b600073__ConvertLib____________________________6396e4ee3d61013384610257565b60026040518363ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808381526020018281526020019250505060206040518083038186803b15801561018c57600080fd5b505af41580156101a0573d6000803e3d6000fd5b505050506040513d60208110156101b657600080fd5b505192915050565b336000908152602081905260408120548211156101dd57506000610251565b336000818152602081815260408083208054879003905573ffffffffffffffffffffffffffffffffffffffff871680845292819020805487019055805186815290519293927fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef929181900390910190a35060015b92915050565b73ffffffffffffffffffffffffffffffffffffffff16600090815260208190526040902054905600a165627a7a72305820bcb4fadf1039a7fe8042582a00a2ab59ea28402c0500a371d8337b6928f4c2b80029",
   "sourceMap": "324:788:1:-;;;472:65;8:9:-1;5:2;;;30:1;27;20:12;5:2;-1:-1;512:9:1;503:8;:19;;;;;;;;;;525:5;503:27;;324:788;;;;;;",
   "deployedSourceMap": "324:788:1:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;870:132;;8:9:-1;5:2;;;30:1;27;20:12;5:2;-1:-1;870:132:1;;;;;;;;;;;;;;;;;;;;;;;543:321;;8:9:-1;5:2;;;30:1;27;20:12;5:2;-1:-1;543:321:1;;;;;;;;;;;;;;;;;;;;;;;;;;;1008:102;;8:9:-1;5:2;;;30:1;27;20:12;5:2;-1:-1;1008:102:1;;;;;;;870:132;930:7;956:10;:18;975:16;986:4;975:10;:16::i;:::-;993:1;956:39;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;956:39:1;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;956:39:1;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;956:39:1;;870:132;-1:-1:-1;;870:132:1:o;543:321::-;671:10;627:15;662:20;;;;;;;;;;;:29;-1:-1:-1;658:47:1;;;-1:-1:-1;700:5:1;693:12;;658:47;724:10;715:8;:20;;;;;;;;;;;:30;;;;;;;:20;755:18;;;;;;;;;:28;;;;;;798:38;;;;;;;755:18;;724:10;798:38;;;;;;;;;;;-1:-1:-1;853:4:1;543:321;;;;;:::o;1008:102::-;1089:14;;1063:7;1089:14;;;;;;;;;;;;1008:102::o",
   "source": "pragma solidity >=0.4.22 <0.7.0;\n\nimport \"./ConvertLib.sol\";\n\n// This is just a simple example of a coin-like contract.\n// It is not standards compatible and cannot be expected to talk to other\n// coin/token contracts. If you want to create a standards-compliant\n// token, see: https://github.com/ConsenSys/Tokens. Cheers!\n\ncontract MetaCoin {\n    mapping(address => uint256) balances;\n\n    event Transfer(address indexed _from, address indexed _to, uint256 _value);\n\n    constructor() public {\n        balances[tx.origin] = 10000;\n    }\n\n    function sendCoin(address receiver, uint256 amount)\n        public\n        returns (bool sufficient)\n    {\n        if (balances[msg.sender] < amount) return false;\n        balances[msg.sender] -= amount;\n        balances[receiver] += amount;\n        emit Transfer(msg.sender, receiver, amount);\n        return true;\n    }\n\n    function getBalanceInEth(address addr) public view returns (uint256) {\n        return ConvertLib.convert(getBalance(addr), 2);\n    }\n\n    function getBalance(address addr) public view returns (uint256) {\n        return balances[addr];\n    }\n}\n",
-  "sourcePath": "/home/jeffrey/token/ido-smartcontract/contracts/MetaCoin.sol",
+  "sourcePath": "/home/nari/private-git/ido-smartcontract/contracts/MetaCoin.sol",
   "ast": {
-    "absolutePath": "/home/jeffrey/token/ido-smartcontract/contracts/MetaCoin.sol",
+    "absolutePath": "/home/nari/private-git/ido-smartcontract/contracts/MetaCoin.sol",
     "exportedSymbols": {
       "MetaCoin": [
         112
@@ -123,7 +123,7 @@
         "src": "0:32:1"
       },
       {
-        "absolutePath": "/home/jeffrey/token/ido-smartcontract/contracts/ConvertLib.sol",
+        "absolutePath": "/home/nari/private-git/ido-smartcontract/contracts/ConvertLib.sol",
         "file": "./ConvertLib.sol",
         "id": 19,
         "nodeType": "ImportDirective",
@@ -325,7 +325,7 @@
                           "name": "tx",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 332,
+                          "referencedDeclaration": 2278,
                           "src": "512:2:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_transaction",
@@ -458,7 +458,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 320,
+                          "referencedDeclaration": 2266,
                           "src": "671:3:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -572,7 +572,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 320,
+                          "referencedDeclaration": 2266,
                           "src": "724:3:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -714,7 +714,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 320,
+                          "referencedDeclaration": 2266,
                           "src": "807:3:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -1300,7 +1300,7 @@
     "src": "0:1113:1"
   },
   "legacyAST": {
-    "absolutePath": "/home/jeffrey/token/ido-smartcontract/contracts/MetaCoin.sol",
+    "absolutePath": "/home/nari/private-git/ido-smartcontract/contracts/MetaCoin.sol",
     "exportedSymbols": {
       "MetaCoin": [
         112
@@ -1324,7 +1324,7 @@
         "src": "0:32:1"
       },
       {
-        "absolutePath": "/home/jeffrey/token/ido-smartcontract/contracts/ConvertLib.sol",
+        "absolutePath": "/home/nari/private-git/ido-smartcontract/contracts/ConvertLib.sol",
         "file": "./ConvertLib.sol",
         "id": 19,
         "nodeType": "ImportDirective",
@@ -1526,7 +1526,7 @@
                           "name": "tx",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 332,
+                          "referencedDeclaration": 2278,
                           "src": "512:2:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_transaction",
@@ -1659,7 +1659,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 320,
+                          "referencedDeclaration": 2266,
                           "src": "671:3:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -1773,7 +1773,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 320,
+                          "referencedDeclaration": 2266,
                           "src": "724:3:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -1915,7 +1915,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 320,
+                          "referencedDeclaration": 2266,
                           "src": "807:3:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -2531,14 +2531,14 @@
         }
       },
       "links": {
-        "ConvertLib": "0x7eb5E3742a74F31Dc455F75a8e412EdaD87F25Ee"
+        "ConvertLib": "0x4d66428d7F35742aB98FbCcfD5DA94c76f369dcD"
       },
-      "address": "0x494094A6d47c4Ca41D3Ab94a7F6F81FB9Ac9166D",
-      "transactionHash": "0x5cd332453032dd58b0a1753c9e1b431c839718d407bbc2a3ca5a2e09c3ac0b9d"
+      "address": "0x0fb5dE13240059129D66bab7Bc8441867Dad0968",
+      "transactionHash": "0x488538e127af5fa5e71df313f309b55be0616684317950da760043ca78fa28b5"
     }
   },
-  "schemaVersion": "3.2.5",
-  "updatedAt": "2020-10-01T15:48:37.253Z",
+  "schemaVersion": "3.2.4",
+  "updatedAt": "2020-10-03T01:41:28.971Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}

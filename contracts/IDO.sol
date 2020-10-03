@@ -1,5 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.8.0;
+
+import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
+
 // ----------------------------------------------------------------------------
 // Sample token contract
 //
@@ -58,23 +61,25 @@ contract ApproveAndCallFallBack {
 /**
 ERC20 Token, with the addition of symbol, name and decimals and assisted token transfers
 */
-contract VisualWaifuToken is ERC20Interface, SafeMath2 {
+contract IDO is ERC20, SafeMath2 {
     string public symbol;
     string public  name;
     uint8 public decimals;
     uint public _totalSupply;
+    uint public networkid;
     mapping(address => uint) balances;
     mapping(address => mapping(address => uint)) allowed;
     // ------------------------------------------------------------------------
     // Constructor
     // ------------------------------------------------------------------------
     constructor() public {
-        symbol = "VSWTS";
-        name = "Visual Waifu Token";
+        symbol = "IDOTK";
+        name = "Initial Data offering";
+        networkid = 0 ;
         decimals = 0;
         _totalSupply = 1000;
-        balances[0x28AB894DfA781F9A55Eb1f7ED67165FdD977A895] = _totalSupply;
-        emit Transfer(address(0), 0x28AB894DfA781F9A55Eb1f7ED67165FdD977A895, _totalSupply);
+        balances[0x4744782cb53279A3aF254E6Ae4431A99Fd90Ab7c] = _totalSupply;
+        emit Transfer(address(0), 0x4744782cb53279A3aF254E6Ae4431A99Fd90Ab7c, _totalSupply);
     }
 
   

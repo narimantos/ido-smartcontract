@@ -1,5 +1,10 @@
 var Channel = artifacts.require("MultiPartyEscrow");
+var MyNotary = artifacts.require("IDO");
+
 
 module.exports = function(deployer, network, accounts) {
-  deployer.deploy(Channel, '0x3E0efa145dD29C455C59ED558963d0211ce6a314');
+  deployer.deploy(MyNotary, {from: accounts[0]}).then(function() {
+  console.log("========================================  ========================================= "+ MyNotary.address)
+   return deployer.deploy(Channel, ""+MyNotary.address);
+  });
 };

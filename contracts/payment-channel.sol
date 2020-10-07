@@ -73,13 +73,27 @@ contract MultiPartyEscrow {
     }
 
     function deposit(uint256 value) public returns (bool) {
-        // require(
-        //     token.transferFrom(msg.sender, token, value),
-        //     "Unable to transfer token to the contract."
-        // );
+        require(
+             token.transferFrom(msg.sender, token, value),
+             "Unable to transfer token to the contract."
+        );
         balances[msg.sender] = balances[msg.sender].add(value);
         emit DepositFunds(msg.sender, value);
         return true;
+    }
+
+    function depositTo(address to, uint256 value) public returns (bool) {
+        require(
+             token.transferFrom(to, token, value),
+             "Unable to transfer token to the contract."
+        );
+        balances[msg.sender] = balances[msg.sender].add(value);
+        emit DepositFunds(msg.sender, value);
+        return true;
+    }    
+
+    function getMsgSender() public view returns (IDO) {
+        return token;
     }
 
     function withdraw(uint256 value) public returns (bool) {
@@ -97,6 +111,7 @@ contract MultiPartyEscrow {
     }
 
     function transfer(address receiver, uint256 value) public returns (bool) {
+        
         require(
             balances[msg.sender] >= value,
             "Insufficient balance in the contract"
@@ -105,6 +120,7 @@ contract MultiPartyEscrow {
         balances[receiver] = balances[receiver].add(value);
 
         emit TransferFunds(msg.sender, receiver, value);
+        //selfdestruct(sender);
         return true;
     }
 
@@ -377,7 +393,6 @@ contract MultiPartyEscrow {
             balances[msg.sender] >= amount,
             "Insufficient balance in the contract"
         );
-
         //tranfser amount from sender to the channel
         balances[msg.sender] = balances[msg.sender].sub(amount);
         channels[channelId].value = channels[channelId].value.add(amount);

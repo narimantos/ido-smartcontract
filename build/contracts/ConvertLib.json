@@ -25,15 +25,15 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.4.26+commit.4563c3fc\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":true,\"inputs\":[{\"name\":\"amount\",\"type\":\"uint256\"},{\"name\":\"conversionRate\",\"type\":\"uint256\"}],\"name\":\"convert\",\"outputs\":[{\"name\":\"convertedAmount\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/home/nari/private-git/ido-smartcontract/contracts/ConvertLib.sol\":\"ConvertLib\"},\"evmVersion\":\"byzantium\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/home/nari/private-git/ido-smartcontract/contracts/ConvertLib.sol\":{\"keccak256\":\"0x10e20a172b452fece152e14fa48ea45568608d7e4a6b44b976a4fbce01a438a4\",\"urls\":[\"bzzr://5ac2aabd5b72b6b954fc858d706e5b22a38b20701115aee4c6f943da6afd2a04\"]}},\"version\":1}",
-  "bytecode": "0x60a861002f600b82828239805160001a6073146000811461001f57610021565bfe5b5030600052607381538281f300730000000000000000000000000000000000000000301460806040526004361060555763ffffffff7c010000000000000000000000000000000000000000000000000000000060003504166396e4ee3d8114605a575b600080fd5b60666004356024356078565b60408051918252519081900360200190f35b02905600a165627a7a7230582095068751319302471f149b11c1434b87c93654ad4a5d8565a0a987c0430fe67c0029",
-  "deployedBytecode": "0x730000000000000000000000000000000000000000301460806040526004361060555763ffffffff7c010000000000000000000000000000000000000000000000000000000060003504166396e4ee3d8114605a575b600080fd5b60666004356024356078565b60408051918252519081900360200190f35b02905600a165627a7a7230582095068751319302471f149b11c1434b87c93654ad4a5d8565a0a987c0430fe67c0029",
+  "metadata": "{\"compiler\":{\"version\":\"0.4.26+commit.4563c3fc\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":true,\"inputs\":[{\"name\":\"amount\",\"type\":\"uint256\"},{\"name\":\"conversionRate\",\"type\":\"uint256\"}],\"name\":\"convert\",\"outputs\":[{\"name\":\"convertedAmount\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/home/jeffrey/token/ido-smartcontract/contracts/ConvertLib.sol\":\"ConvertLib\"},\"evmVersion\":\"byzantium\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/home/jeffrey/token/ido-smartcontract/contracts/ConvertLib.sol\":{\"keccak256\":\"0x10e20a172b452fece152e14fa48ea45568608d7e4a6b44b976a4fbce01a438a4\",\"urls\":[\"bzzr://5ac2aabd5b72b6b954fc858d706e5b22a38b20701115aee4c6f943da6afd2a04\"]}},\"version\":1}",
+  "bytecode": "0x60a861002f600b82828239805160001a6073146000811461001f57610021565bfe5b5030600052607381538281f300730000000000000000000000000000000000000000301460806040526004361060555763ffffffff7c010000000000000000000000000000000000000000000000000000000060003504166396e4ee3d8114605a575b600080fd5b60666004356024356078565b60408051918252519081900360200190f35b02905600a165627a7a72305820763b46eee54a27b9c9290b890e43b235fcb0d941f86cc7cb0b19dec93db594e90029",
+  "deployedBytecode": "0x730000000000000000000000000000000000000000301460806040526004361060555763ffffffff7c010000000000000000000000000000000000000000000000000000000060003504166396e4ee3d8114605a575b600080fd5b60666004356024356078565b60408051918252519081900360200190f35b02905600a165627a7a72305820763b46eee54a27b9c9290b890e43b235fcb0d941f86cc7cb0b19dec93db594e90029",
   "sourceMap": "34:155:0:-;;132:2:-1;166:7;155:9;146:7;137:37;252:7;246:14;243:1;238:23;232:4;229:33;270:1;265:20;;;;222:63;;265:20;274:9;222:63;;298:9;295:1;288:20;328:4;319:7;311:22;352:7;343;336:24",
   "deployedSourceMap": "34:155:0:-;;;;;;;;;;;;;;;;;;;;;;;;;;55:132;;;;;;;;;;;;;;;;;;;;;;;;;160:23;;55:132::o",
   "source": "pragma solidity >=0.4.22 <0.7.0;\n\nlibrary ConvertLib{\n\tfunction convert(uint amount,uint conversionRate) public pure returns (uint convertedAmount)\n\t{\n\t\treturn amount * conversionRate;\n\t}\n}\n",
-  "sourcePath": "/home/nari/private-git/ido-smartcontract/contracts/ConvertLib.sol",
+  "sourcePath": "/home/jeffrey/token/ido-smartcontract/contracts/ConvertLib.sol",
   "ast": {
-    "absolutePath": "/home/nari/private-git/ido-smartcontract/contracts/ConvertLib.sol",
+    "absolutePath": "/home/jeffrey/token/ido-smartcontract/contracts/ConvertLib.sol",
     "exportedSymbols": {
       "ConvertLib": [
         16
@@ -243,7 +243,7 @@
     "src": "0:190:0"
   },
   "legacyAST": {
-    "absolutePath": "/home/nari/private-git/ido-smartcontract/contracts/ConvertLib.sol",
+    "absolutePath": "/home/jeffrey/token/ido-smartcontract/contracts/ConvertLib.sol",
     "exportedSymbols": {
       "ConvertLib": [
         16
@@ -460,12 +460,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x4d66428d7F35742aB98FbCcfD5DA94c76f369dcD",
-      "transactionHash": "0xfb4f31e20bfe5a1c8a98176d1dee3f3a5c204e6d022700e55867104a91a3e462"
+      "address": "0xeAa216630f357c1Ba8dA45cDe914b8d33f95933a",
+      "transactionHash": "0x078611c38c55511503706a0305efdb428111dd08d498d053ac46b0baca0c95d5"
     }
   },
-  "schemaVersion": "3.2.4",
-  "updatedAt": "2020-10-03T01:41:28.969Z",
+  "schemaVersion": "3.2.5",
+  "updatedAt": "2020-10-07T15:03:20.408Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}

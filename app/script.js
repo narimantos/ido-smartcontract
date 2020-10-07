@@ -1,9 +1,8 @@
 const Web3 = require('web3');
 const MyContract = require('../build/contracts/IDO.json');
 
-
-var Bill = "0x14B1fC6Bc8a831ED0d90b282a97F04b48Bb608B9";
-var Alice = "0x3948b75cB2256761245CB992668B4507E2eC2214"; 
+var Bill = "0x418A0e6F1440fB13cc93a5B25930e945BA0E493b";
+var Alice = "0x29a59fFB71cE64A386d48EcdC3f5e9adbDb83580"; 
 
 const initPChannel = async (val) => {
 
@@ -24,26 +23,31 @@ const initPChannel = async (val) => {
   async function displayInformation(val) {
 
     var deposit = await MyEscrowContract.methods.deposit(val).send({from:Bill}).then(
-      deposit => console.log("deposited amount " + val)
+      deposit => console.log("deposited amount to bill Balance : " + val)
    ).catch((error) => console.log(error + "------------------"));
 
     var openChannel = await MyEscrowContract.methods.openChannel(
       Bill, // Ganache[0]
       Alice, // Ganache[1]
-      0,val,300000) // groupId, Deposit value, expiration(in ms)
+      10,val,10000) // groupId, Deposit value, expiration(in ms)
 
       await MyEscrowContract.methods.balances(Alice).call().then(
         balances => console.log("BALANCE OF ALICE BEFORE === "+balances));      
 
     for(var i = 0; i < 5; i++){
+      await MyEscrowContract.methods.balances(Bill).call().then(
+        balances => console.log("BALANCE OF BILL === "+balances));      
       await MyEscrowContract.methods.transfer(
         Alice,1).send({from:Bill})      
-      await MyEscrowContract.methods.balances(Bill).call().then(
-        balances => console.log("BALANCE OF BILL === "+balances));
     }
-    
-    await MyEscrowContract.methods.withdraw(1).send({from:Bill});
+    await MyEscrowContract.methods.balanceOwnerToken().call().then(
+      result => console.log("== Balance of msg.sender " + result));
 
+    await MyEscrowContract.methods.balanceOwnerToken(Alice).call().then(
+      result => console.log("== Balance of Alice " + result));
+
+    await MyEscrowContract.methods.withdraw(5).send({from:Alice});
+  
     await MyEscrowContract.methods.balances(Alice).call().then(
       balances => console.log("BALANCE OF ALICE AFTER === "+balances));    
 
@@ -127,7 +131,7 @@ const IDO = async (val) => {
 }
 
 //initApi();
-initPChannel(10);
+initPChannel(5);
 //IDO();
 //init1();
 

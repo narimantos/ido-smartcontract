@@ -74,7 +74,7 @@ contract MultiPartyEscrow {
 
     function deposit(uint256 value) public returns (bool) {
         require(
-             token.transferFrom(msg.sender, token, value),
+             token.transferFrom(msg.sender, this, value), //msg.sender BILL, token = IDO.
              "Unable to transfer token to the contract."
         );
         balances[msg.sender] = balances[msg.sender].add(value);
@@ -83,10 +83,17 @@ contract MultiPartyEscrow {
     }
 
     function depositTo(address to, uint256 value) public returns (bool) {
+
+        require (
+            token.approve(msg.sender , value),
+            "JAJAJAJA"
+        );       
+
         require(
              token.transferFrom(to, token, value),
              "Unable to transfer token to the contract."
         );
+        
         balances[msg.sender] = balances[msg.sender].add(value);
         emit DepositFunds(msg.sender, value);
         return true;
@@ -108,6 +115,14 @@ contract MultiPartyEscrow {
         balances[msg.sender] = balances[msg.sender].sub(value);
         emit WithdrawFunds(msg.sender, value);
         return true;
+    }
+
+    function balanceOwnerToken() public view returns (uint result) {
+        result = token.getBalancesFrom(msg.sender);
+    }
+
+    function balanceOwnerToken(address target) public view returns (uint result) {
+        result = token.getBalancesFrom(target);
     }
 
     function transfer(address receiver, uint256 value) public returns (bool) {

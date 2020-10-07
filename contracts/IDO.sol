@@ -50,8 +50,6 @@ contract ERC20Interface {
     function transferFrom(address from, address to, uint tokens) public returns (bool success);
     event Transfer(address indexed from, address indexed to, uint tokens);
     event Approval(address indexed tokenOwner, address indexed spender, uint tokens);
-    mapping(address => uint) balances;
-    mapping(address => mapping(address => uint)) private allowed;    
 }
 /**
 Contract function to receive approval and execute function in one call
@@ -63,14 +61,14 @@ contract ApproveAndCallFallBack {
 /**
 ERC20 Token, with the addition of symbol, name and decimals and assisted token transfers
 */
-contract IDO is ERC20Interface, SafeMath2 {
+contract IDO is ERC20, SafeMath2 {
     string public symbol;
     string public  name;
     uint8 public decimals;
     uint public _totalSupply;
     uint public networkid;
     mapping(address => uint) balances;
-    mapping(address => mapping(address => uint)) public allowed;
+    mapping(address => mapping(address => uint)) allowed;
     // ------------------------------------------------------------------------
     // Constructor
     // ------------------------------------------------------------------------
@@ -80,10 +78,8 @@ contract IDO is ERC20Interface, SafeMath2 {
         networkid = 0 ;
         decimals = 0;
         _totalSupply = 10000;
-        balances[0x14B1fC6Bc8a831ED0d90b282a97F04b48Bb608B9] = _totalSupply / 2;
-        balances[0x3948b75cB2256761245CB992668B4507E2eC2214] = _totalSupply / 2;
-        emit Transfer(address(0), 0x14B1fC6Bc8a831ED0d90b282a97F04b48Bb608B9, _totalSupply / 2);
-        emit Transfer(address(0), 0x3948b75cB2256761245CB992668B4507E2eC2214, _totalSupply / 2);
+        balances[0x418A0e6F1440fB13cc93a5B25930e945BA0E493b] = _totalSupply;
+        emit Transfer(address(0), 0x418A0e6F1440fB13cc93a5B25930e945BA0E493b, _totalSupply);
     }
 
   
@@ -104,6 +100,8 @@ contract IDO is ERC20Interface, SafeMath2 {
     // Transfer the balance from token owner's account to to account
     // - Owner's account must have sufficient balance to transfer
     // - 0 value transfers are allowed
+    // balances[address van payment-channel] => 20
+    //
     // ------------------------------------------------------------------------
     function transfer(address to, uint tokens) public returns (bool success) {
         balances[msg.sender] = safeSub(balances[msg.sender], tokens);
@@ -147,23 +145,10 @@ contract IDO is ERC20Interface, SafeMath2 {
         return true;
     }
 
-    function testSafeAdd(uint a, uint b) public pure returns (uint calculation){
-        calculation = safeAdd(a,b);
-    }
-
-    function testSafeSub(uint a, uint b) public pure returns (uint calculation){
-        calculation = safeSub(a,b);
-    }
-
     function getBalancesFrom(address from) public view returns (uint balance){
         return balances[from];
     }
 
-    function approveEscrow(address to, uint value) public returns (bool success) {
-        approve(to, value);
-        transfer(to, value);
-        return true;
-    }
     // ------------------------------------------------------------------------
     // Returns the amount of tokens approved by the owner that can be
     // transferred to the spender's account
@@ -172,11 +157,6 @@ contract IDO is ERC20Interface, SafeMath2 {
         remaining  = allowed[from][spender];
         return remaining;
     }
-    function approveCheck(address from, address spender, uint val) public returns (uint success) {
-        allowed[from][spender] = val;
-        emit Approval(from, spender, val);
-        return allowed[from][spender];
-    }    
     // ------------------------------------------------------------------------
     // Token owner can approve for spender to transferFrom(...) tokens
     // from the token owner's account. The spender contract function
@@ -191,7 +171,7 @@ contract IDO is ERC20Interface, SafeMath2 {
     // ------------------------------------------------------------------------
     // Don't accept ETH
     // ------------------------------------------------------------------------
-    /*function () public payable {
+    function () public payable {
         revert();
-    }*/
+    }
 }

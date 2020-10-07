@@ -142,6 +142,7 @@ contract MultiPartyEscrow {
     //open a channel, token should be already being deposit
     //openChannel should be run only once for given sender, recipient, groupId
     //channel can be reused even after channelClaim(..., isSendback=true)
+    //Bob/reciptient is the server Alice/signer
     function openChannel(
         address signer,
         address recipient,

@@ -34,6 +34,7 @@ const initPChannel = async (val) => {
       await MyEscrowContract.methods.balances(Alice).call().then(
         balances => console.log("BALANCE OF ALICE BEFORE === "+balances));      
 
+    //Extra verificatie hier zetten.
     for(var i = 0; i < 5; i++){
       await MyEscrowContract.methods.balances(Bill).call().then(
         balances => console.log("BALANCE OF BILL === "+balances));      
@@ -46,6 +47,7 @@ const initPChannel = async (val) => {
     await MyEscrowContract.methods.balanceOwnerToken(Alice).call().then(
       result => console.log("== Balance of Alice " + result));
 
+    //balance heeft iets.
     await MyEscrowContract.methods.withdraw(5).send({from:Alice});
   
     await MyEscrowContract.methods.balances(Alice).call().then(
@@ -54,7 +56,6 @@ const initPChannel = async (val) => {
   }
   return userAccount;
 }
-
 
 function initApi() {
   var express = require("express");
@@ -79,7 +80,6 @@ function initApi() {
   })
 
 }
-
 
 const IDO = async (val) => {
 

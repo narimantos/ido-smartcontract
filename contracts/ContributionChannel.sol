@@ -28,6 +28,7 @@ contract ContributionChannel  {
 
     uint256 public nextChannelId; //id of the next channel (and size of channels)
 
+    address public IDOWALLET = address(0xa85108Ce1E9710679246ceb9F61b18B1326A1fBB);
     IDO public token; // Address of token contract
 
     //already used messages for openChannelByThirdParty in order to prevent replay attack
@@ -74,12 +75,22 @@ contract ContributionChannel  {
 
     function deposit(uint256 value) public returns (bool) {
         require(
-             token.transferFrom(msg.sender, this, value), //msg.sender BILL, token = IDO.
+             token.transferFrom(IDOWALLET, this, value), //msg.sender BILL, token = IDO.
              "Unable to transfer token to the contract."
         );
+
         balances[msg.sender] = balances[msg.sender].add(value);
-        emit DepositFunds(msg.sender, value);
+        emit DepositFunds(IDOWALLET, value);
         return true;
+    }
+
+    function setData(string a) public {
+         token.setData(msg.sender, a);
+    }
+
+
+    function getData(address adr)  public view returns (string) {
+        return token.getData(adr);
     }
 
     function depositTo(address to, uint256 value) public returns (bool) {
@@ -87,17 +98,17 @@ contract ContributionChannel  {
         require (
             token.approve(msg.sender , value),
             "JAJAJAJA"
-        );       
+        );
 
         require(
              token.transferFrom(to, token, value),
              "Unable to transfer token to the contract."
         );
-        
+
         balances[msg.sender] = balances[msg.sender].add(value);
         emit DepositFunds(msg.sender, value);
         return true;
-    }    
+    }
 
     function getMsgSender() public view returns (IDO) {
         return token;

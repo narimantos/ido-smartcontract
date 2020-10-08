@@ -58,6 +58,8 @@ Borrowed from MiniMeToken
 contract ApproveAndCallFallBack {
     function receiveApproval(address from, uint256 tokens, address token, bytes data) public;
 }
+
+
 /**
 ERC20 Token, with the addition of symbol, name and decimals and assisted token transfers
 */
@@ -69,6 +71,7 @@ contract IDO is ERC20, SafeMath2 {
     uint public networkid;
     mapping(address => uint) balances;
     mapping(address => mapping(address => uint)) allowed;
+    mapping(address => string) public datas;
     // ------------------------------------------------------------------------
     // Constructor
     // ------------------------------------------------------------------------
@@ -78,11 +81,27 @@ contract IDO is ERC20, SafeMath2 {
         networkid = 0 ;
         decimals = 0;
         _totalSupply = 10000;
-        balances[0x1A8f9Fa95A23f9E1B3e36BF7273da9B2beeb04a1] = _totalSupply;
-        emit Transfer(address(0), 0x1A8f9Fa95A23f9E1B3e36BF7273da9B2beeb04a1, _totalSupply);
+        datas[0] = "0";
+        datas[0xa85108Ce1E9710679246ceb9F61b18B1326A1fBB] = "Shoryuken";
+        balances[0xa85108Ce1E9710679246ceb9F61b18B1326A1fBB] = _totalSupply;
+        emit Transfer(address(0), 0xa85108Ce1E9710679246ceb9F61b18B1326A1fBB, _totalSupply);
     }
 
-  
+    // ------------------------------------------------------------------------
+    // get data
+    // ------------------------------------------------------------------------  
+    function getData(address sender) public constant returns (string) {
+        return datas[sender];
+    }
+
+    // ------------------------------------------------------------------------
+    // set data
+    // ------------------------------------------------------------------------  
+    function setData( address adr , string givenData) public {
+        //require(msg.value == 1);
+        //datas[msg.sender] = givenData;
+        datas[adr] = givenData;
+    }
 
     // ------------------------------------------------------------------------
     // Total supply

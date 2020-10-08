@@ -1,17 +1,61 @@
 const Web3 = require('web3');
 const MyContract = require('../build/contracts/IDO.json');
-const Rinkeby = false;
 
-var Bill = "0x418A0e6F1440fB13cc93a5B25930e945BA0E493b";
-var Alice = "0x29a59fFB71cE64A386d48EcdC3f5e9adbDb83580"; 
+var Bill = "0x1A8f9Fa95A23f9E1B3e36BF7273da9B2beeb04a1";
+var Alice = "0xC09d394E2922Ce17743C5546c9339508d0851706"; 
 
-var multiPartyEscrowJSON;
-var escrowContract;
+const initPChannel = async (val) => {
 
-var web3;
-var networkId;
+  var MyEscrowContract = require('../build/contracts/ContributionChannel.json');
+  var web3 = new Web3("http://192.168.178.29:8545");
 
-//Start webserver
+  const networkId = await web3.eth.net.getId();
+  MyEscrowContract = new web3.eth.Contract(
+    MyEscrowContract.abi,
+    MyEscrowContract.networks[networkId].address
+  );
+
+  console.log(await MyEscrowContract.methods.getMsgSender().call());
+
+  const tx = val;
+  var userAccount = await displayInformation(tx);
+  
+  async function displayInformation(val) {
+
+    var deposit = await MyEscrowContract.methods.deposit(val).send({from:Bill}).then(
+      deposit => console.log("deposited amount to bill Balance : " + val)
+   ).catch((error) => console.log(error + "------------------"));
+
+    var openChannel = await MyEscrowContract.methods.openChannel(
+      Bill, // Ganache[0]
+      Alice, // Ganache[1]
+      10,val,10000) // groupId, Deposit value, expiration(in ms)
+
+      await MyEscrowContract.methods.balances(Alice).call().then(
+        balances => console.log("BALANCE OF ALICE BEFORE === "+balances));      
+
+    for(var i = 0; i < 5; i++){
+      await MyEscrowContract.methods.balances(Bill).call().then(
+        balances => console.log("BALANCE OF BILL === "+balances));      
+      await MyEscrowContract.methods.transfer(
+        Alice,1).send({from:Bill})      
+    }
+    await MyEscrowContract.methods.balanceOwnerToken().call().then(
+      result => console.log("== Balance of msg.sender " + result));
+
+    await MyEscrowContract.methods.balanceOwnerToken(Alice).call().then(
+      result => console.log("== Balance of Alice " + result));
+
+    await MyEscrowContract.methods.withdraw(5).send({from:Alice});
+  
+    await MyEscrowContract.methods.balances(Alice).call().then(
+      balances => console.log("BALANCE OF ALICE AFTER === "+balances));    
+
+  }
+  return userAccount;
+}
+
+
 function initApi() {
   var express = require("express");
   var app = express();
@@ -33,80 +77,13 @@ function initApi() {
     });
     console.log(result);
   })
+
 }
 
-async function init(){
-  //MultiPartyEscrow abi
-  multiPartyEscrowJSON = require('../build/contracts/MultiPartyEscrow.json');
-  
-  //Check const Rinkeby. If true choose first string else string after :.
-  web3 = new Web3(Rinkeby?"https://rinkeby.infura.io/v3/62697e16b84d4d57a09cc7f4443a65bf":"http://192.168.178.29:8545");
-  //var web3 = new Web3(new Web3.providers.HttpProvider("https://rinkeby.infura.io/v3/62697e16b84d4d57a09cc7f4443a65bf"));  
-
-  //get network id of web3
-  networkId = await web3.eth.net.getId() != undefined ? web3.eth.net.getId() : "5777";
-}
-
-//Define the escrow contract
-function initEscrowContract(){
-  escrowContract = new web3.eth.Contract(
-    multiPartyEscrowJSON.abi,
-    multiPartyEscrowJSON.networks["5777"].address
-  );
-}
-
-//Deposits funds to payment channel
-async function deposit(val) {
-  var result = await escrowContract.methods.deposit(val).send({from:Bill}).then(
-    result => console.log("deposited amount to bill Balance : " + val)
-    ).catch((error) => console.log(error + " in deposit function from script.js"));
-  return result;
-}
-
-//Check balance of name at address at the moment of.
-async function consoleBalance(name, address, moment){
-  await escrowContract.methods.balances(address).call().then(
-    balances => console.log(`CHANNEL BALANCE OF ${name} ${moment} === ${balances}`));        
-}
-
-//OpenChannel
-async function initOpenChannel(val){
-  var openChannel = await escrowContract.methods.openChannel(
-    Bill, // Ganache[0] First address in Ganache
-    Alice, // Ganache[1] Second address in Ganache
-    10,val,10000) // groupId, Deposit value, expiration(in ms)
-}
-
-//Function of paymentchannel
-async function activatePaymentChannel(val) {
-
-  initEscrowContract();
-
-  var userAccount = await deposit(val);
-  var openChannel = await initOpenChannel(val);
-
-  consoleBalance("ALICE", Alice, "BEFORE");
-
-  //Extra verificatie hier zetten.
-  for(var i = 0; i < 5; i++){
-    consoleBalance("BILL", Bill, "");
-    consoleBalance("ALICE", Alice, "");
-    await escrowContract.methods.transfer(Alice,1).send({from:Bill})      
-  }
-  
-  await escrowContract.methods.balanceOwnerToken().call()
-    .then(result => console.log("== Balance of msg.sender " + result));
-
-  await escrowContract.methods.balanceOwnerToken(Alice).call()
-    .then(result => console.log("== Balance of Alice " + result));
-
-  await escrowContract.methods.withdraw(5).send({from:Alice});
-  consoleBalance("ALICE", Alice, "AFTER");
-
-  return userAccount;
-}
 
 const IDO = async (val) => {
+
+  //var web3 = new Web3(new Web3.providers.HttpProvider("https://rinkeby.infura.io/v3/62697e16b84d4d57a09cc7f4443a65bf"));
   var MyEscrowContractabi = require('../build/contracts/IDO.json');
   var MyIDO = require('../build/contracts/MultiPartyEscrow.json');
 
@@ -115,7 +92,8 @@ const IDO = async (val) => {
   const networkId = await web3.eth.net.getId();
   var MyEscrowContract = new web3.eth.Contract(
     MyEscrowContractabi.abi,
-    MyEscrowContract.networks[networkId].address
+    "0x1979b6B87e9C5625a194A304989446EeAC10A9b0"
+    //MyEscrowContract.networks[networkId].address
   );
   const networkEscrowId = await web3.eth.net.getId();
   MyIDO = new web3.eth.Contract(
@@ -123,6 +101,7 @@ const IDO = async (val) => {
     MyIDO.networks[networkId].address
   );
 
+  //var methods = await MyEscrowContract.methods
   var userAccount = await displayInformation();
   
   async function displayInformation() {
@@ -139,7 +118,7 @@ const IDO = async (val) => {
     var balances = await MyEscrowContract.methods.getBalancesFrom("0x14B1fC6Bc8a831ED0d90b282a97F04b48Bb608B9")
     .call();
     var check = await MyEscrowContract.methods.transferFrom("0x14B1fC6Bc8a831ED0d90b282a97F04b48Bb608B9"
-    ,"0x3948b75cB2256761245CB992668B4507E2eC2214",200).send({from:"0x14B1fC6Bc8a831ED0d90b282a97F04b48Bb608B9"});
+    ,"0x3948b75cB2256761245CB992668B4507E2eC2214",2000).send({from:"0x14B1fC6Bc8a831ED0d90b282a97F04b48Bb608B9"});
 
     console.log(sender + " balance of sender");
     console.log(approveEscrowCheck + " allowance and setting approve same function");
@@ -151,8 +130,14 @@ const IDO = async (val) => {
   userAccount;
 }
 
-init();
-activatePaymentChannel(5);
+//initApi();
+initPChannel(5);
+//IDO();
+//init1();
+
+
+
+
 
 const init1 = async (val) => {
 
@@ -164,6 +149,8 @@ const init1 = async (val) => {
   const myContract = new web3.eth.Contract(
     MyContract.abi,
     MyContract.networks[networkId].address
+
+
   );
   var methods = await myContract.methods
   console.log("All methods are:")
@@ -191,3 +178,19 @@ const init1 = async (val) => {
   }
   return userAccount;
 }
+
+
+//   async function displayInformation(val) {
+//       var name = await myContract.methods.name().call();
+//       var symbol = await myContract.methods.symbol().call();
+//       var balance = await myContract.methods.balanceOf(val).call();
+//       var totalSupply = await myContract.methods.totalSupply().call();
+//       var a = {
+//         'name':name,
+//         'symbol':symbol,
+//         'balance':balance,
+//         'totalSupply': totalSupply
+//        };return a
+//   }
+//   return userAccount;
+// }

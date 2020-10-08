@@ -1,4 +1,4 @@
-var Channel = artifacts.require("MultiPartyEscrow");
+var Channel = artifacts.require("ContributionChannel");
 var MyNotary = artifacts.require("IDO");
 
 

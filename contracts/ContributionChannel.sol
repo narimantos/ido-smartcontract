@@ -28,7 +28,7 @@ contract ContributionChannel  {
 
     uint256 public nextChannelId; //id of the next channel (and size of channels)
 
-    address public IDOWALLET = address(0xa85108Ce1E9710679246ceb9F61b18B1326A1fBB);
+    address public IDOWALLET = address(0xe7E65D6F06362e9F188A9DbFeE9C128Fc4B19939);
     IDO public token; // Address of token contract
 
     //already used messages for openChannelByThirdParty in order to prevent replay attack

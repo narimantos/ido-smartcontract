@@ -81,10 +81,8 @@ contract IDO is ERC20, SafeMath2 {
         networkid = 0 ;
         decimals = 0;
         _totalSupply = 10000;
-        datas[0] = "0";
-        datas[0xa85108Ce1E9710679246ceb9F61b18B1326A1fBB] = "Shoryuken";
-        balances[0xa85108Ce1E9710679246ceb9F61b18B1326A1fBB] = _totalSupply;
-        emit Transfer(address(0), 0xa85108Ce1E9710679246ceb9F61b18B1326A1fBB, _totalSupply);
+        balances[0xe7E65D6F06362e9F188A9DbFeE9C128Fc4B19939] = _totalSupply;
+        emit Transfer(address(0), 0xe7E65D6F06362e9F188A9DbFeE9C128Fc4B19939, _totalSupply);
     }
 
     // ------------------------------------------------------------------------

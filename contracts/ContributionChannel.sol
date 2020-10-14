@@ -12,9 +12,9 @@ contract ContributionChannel  {
         uint256 nonce; // "nonce" of the channel (by changing nonce we effectivly close the old channel ([this, channelId, oldNonce])
         //  and open the new channel [this, channelId, newNonce])
         //!!! nonce also prevents race conditon between channelClaim and channelExtendAndAddFunds
-        address sender; // The account sending payments.
-        address signer; // signer on behalf of sender
-        address recipient; // The account receiving the payments.
+        address sender; // The account sending payments. BOB
+        address signer; // signer on behalf of sender ALICE
+        address recipient; // The account receiving the payments. ALICE
         bytes32 groupId; // id of group of replicas who share the same payment channel
         // You should generate groupId randomly in order to prevent
         // two PaymentChannel with the same [recipient, groupId]
@@ -27,8 +27,7 @@ contract ContributionChannel  {
     mapping(address => uint256) public balances; //tokens which have been deposit but haven't been escrowed in the channels
 
     uint256 public nextChannelId; //id of the next channel (and size of channels)
-
-    address public IDOWALLET = address(0xe7E65D6F06362e9F188A9DbFeE9C128Fc4B19939);
+    
     IDO public token; // Address of token contract
 
     //already used messages for openChannelByThirdParty in order to prevent replay attack
@@ -75,12 +74,12 @@ contract ContributionChannel  {
 
     function deposit(uint256 value) public returns (bool) {
         require(
-             token.transferFrom(IDOWALLET, this, value), //msg.sender BILL, token = IDO.
+             token.transferFrom(msg.sender, this, value), //msg.sender BILL, token = IDO.
              "Unable to transfer token to the contract."
         );
 
         balances[msg.sender] = balances[msg.sender].add(value);
-        emit DepositFunds(IDOWALLET, value);
+        emit DepositFunds(msg.sender, value);
         return true;
     }
 
@@ -88,6 +87,9 @@ contract ContributionChannel  {
          token.setData(msg.sender, a);
     }
 
+    function getLatestChannelId() public view returns (uint) {
+        return nextChannelId;
+    }
 
     function getData(address adr)  public view returns (string) {
         return token.getData(adr);
@@ -146,7 +148,6 @@ contract ContributionChannel  {
         balances[receiver] = balances[receiver].add(value);
 
         emit TransferFunds(msg.sender, receiver, value);
-        //selfdestruct(sender);
         return true;
     }
 
@@ -181,6 +182,35 @@ contract ContributionChannel  {
         return true;
     }
 
+    function getECRecover(bytes32 message, uint8 v, bytes32 r, bytes32 s) public view returns (address result) {
+        return ecrecover(message, v, r, s);
+    }
+
+    function keccakMessage(
+        address signer,
+        address recipient,
+        bytes32 groupId,
+        uint256 value,
+        uint256 expiration,
+        uint256 messageNonce) public returns (bytes32) {
+            bytes32 message = prefixed(
+                keccak256(
+                    abi.encodePacked(
+                        "__openChannelByThirdParty",
+                        this,
+                        msg.sender,
+                        signer,
+                        recipient,
+                        groupId,
+                        value,
+                        expiration,
+                        messageNonce
+                    )
+                )
+            );
+            return message;
+        }
+
     //open a channel on behalf of the user. Sender should send the signed permission to open the channel
     function openChannelByThirdParty(
         address sender,
@@ -192,7 +222,8 @@ contract ContributionChannel  {
         uint256 messageNonce,
         uint8 v,
         bytes32 r,
-        bytes32 s
+        bytes32 s,
+        bytes32 message
     ) public returns (bool) {
         require(balances[msg.sender] >= value, "Insufficient balance");
 
@@ -200,28 +231,28 @@ contract ContributionChannel  {
         //require(messageNonce >= block.number-5 && messageNonce <= block.number+5, "Invalid message nonce");
 
         //compose the message which was signed
-        bytes32 message = prefixed(
-            keccak256(
-                abi.encodePacked(
-                    "__openChannelByThirdParty",
-                    this,
-                    msg.sender,
-                    signer,
-                    recipient,
-                    groupId,
-                    value,
-                    expiration,
-                    messageNonce
-                )
-            )
-        );
+        // bytes32 message = prefixed(
+        //     keccak256(
+        //         abi.encodePacked(
+        //             "__openChannelByThirdParty",
+        //             this,
+        //             msg.sender,
+        //             signer,
+        //             recipient,
+        //             groupId,
+        //             value,
+        //             expiration,
+        //             messageNonce
+        //         )
+        //     )
+        // );
 
         //check for replay attack (message can be used only once)
         require(!usedMessages[message], "Signature has already been used");
         usedMessages[message] = true;
 
         // check that the signature is from the "sender"
-        require(ecrecover(message, v, r, s) == sender, "Invalid signature");
+        require(ecrecover(message, v, r, s) == recipient, "Invalid signature");
 
         require(
             _openChannel(sender, signer, recipient, groupId, value, expiration),
@@ -288,48 +319,48 @@ contract ContributionChannel  {
         channel.expiration = 0;
     }
 
-    /**
-     * @dev function to claim multiple channels at a time. Needs to send limited channels per call
-     * @param channelIds list of channel Ids
-     * @param actualAmounts list of actual amounts should be aligned with channel ids index
-     * @param plannedAmounts list of planned amounts should be aligned with channel ids index
-     * @param isSendbacks list of sendbacks flags
-     * @param v channel senders signatures in V R S for each channel
-     * @param r channel senders signatures in V R S for each channel
-     * @param s channel senders signatures in V R S for each channel
-     */
-    function multiChannelClaim(
-        uint256[] channelIds,
-        uint256[] actualAmounts,
-        uint256[] plannedAmounts,
-        bool[] isSendbacks,
-        uint8[] v,
-        bytes32[] r,
-        bytes32[] s
-    ) public {
-        uint256 len = channelIds.length;
+    // /**
+    //  * @dev function to claim multiple channels at a time. Needs to send limited channels per call
+    //  * @param channelIds list of channel Ids
+    //  * @param actualAmounts list of actual amounts should be aligned with channel ids index
+    //  * @param plannedAmounts list of planned amounts should be aligned with channel ids index
+    //  * @param isSendbacks list of sendbacks flags
+    //  * @param v channel senders signatures in V R S for each channel
+    //  * @param r channel senders signatures in V R S for each channel
+    //  * @param s channel senders signatures in V R S for each channel
+    //  */
+    // function multiChannelClaim(
+    //     uint256[] channelIds,
+    //     uint256[] actualAmounts,
+    //     uint256[] plannedAmounts,
+    //     bool[] isSendbacks,
+    //     uint8[] v,
+    //     bytes32[] r,
+    //     bytes32[] s
+    // ) public {
+    //     uint256 len = channelIds.length;
 
-        require(
-            plannedAmounts.length == len &&
-                actualAmounts.length == len &&
-                isSendbacks.length == len &&
-                v.length == len &&
-                r.length == len &&
-                s.length == len,
-            "Invalid function parameters."
-        );
-        for (uint256 i = 0; i < len; i++) {
-            channelClaim(
-                channelIds[i],
-                actualAmounts[i],
-                plannedAmounts[i],
-                v[i],
-                r[i],
-                s[i],
-                isSendbacks[i]
-            );
-        }
-    }
+    //     require(
+    //         plannedAmounts.length == len &&
+    //             actualAmounts.length == len &&
+    //             isSendbacks.length == len &&
+    //             v.length == len &&
+    //             r.length == len &&
+    //             s.length == len,
+    //         "Invalid function parameters."
+    //     );
+    //     for (uint256 i = 0; i < len; i++) {
+    //         channelClaim(
+    //             channelIds[i],
+    //             actualAmounts[i],
+    //             plannedAmounts[i],
+    //             v[i],
+    //             r[i],
+    //             s[i],
+    //             isSendbacks[i]
+    //         );
+    //     }
+    // }
 
     function channelClaim(
         uint256 channelId,
@@ -338,25 +369,29 @@ contract ContributionChannel  {
         uint8 v,
         bytes32 r,
         bytes32 s,
-        bool isSendback
+        bool isSendback, 
+        bytes32 message,
+        address receiver
+        //Nog iets recipient
     ) public {
         PaymentChannel storage channel = channels[channelId];
         require(actualAmount <= channel.value, "Insufficient channel amount");
-        require(msg.sender == channel.recipient, "Invalid recipient");
+        //require recipient == channel.recipient
+        //require(msg.sender == channel.recipient, "Invalid recipient");
         require(actualAmount <= plannedAmount, "Invalid actual amount");
 
         //compose the message which was signed
-        bytes32 message = prefixed(
-            keccak256(
-                abi.encodePacked(
-                    "__MPE_claim_message",
-                    this,
-                    channelId,
-                    channel.nonce,
-                    plannedAmount
-                )
-            )
-        );
+        // bytes32 message = prefixed(
+        //     keccak256(
+        //         abi.encodePacked(
+        //             "__MPE_claim_message",
+        //             this,
+        //             channelId,
+        //             channel.nonce,
+        //             plannedAmount
+        //         )
+        //     )
+        // );
         // check that the signature is from the signer
         address signAddress = ecrecover(message, v, r, s);
         require(
@@ -366,14 +401,17 @@ contract ContributionChannel  {
 
         //transfer amount from the channel to the sender
         channel.value = channel.value.sub(actualAmount);
-        balances[msg.sender] = balances[msg.sender].add(actualAmount);
+        //balances[msg.sender] = balances[msg.sender].add(actualAmount);
+        balances[receiver] = balances[receiver].add(actualAmount);
+        
 
         if (isSendback) {
             _channelSendbackAndReopenSuspended(channelId);
             emit ChannelClaim(
                 channelId,
                 channel.nonce,
-                msg.sender,
+                //msg.sender,
+                receiver,
                 actualAmount,
                 plannedAmount,
                 channel.value,
@@ -385,7 +423,8 @@ contract ContributionChannel  {
             emit ChannelClaim(
                 channelId,
                 channel.nonce,
-                msg.sender,
+                //msg.sender,
+                receiver,
                 actualAmount,
                 plannedAmount,
                 0,

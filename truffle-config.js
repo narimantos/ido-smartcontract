@@ -7,7 +7,9 @@ module.exports = {
       host: "192.168.178.29",
       port: 8545,
       network_id: "*", // Match any network id
-      gas: 3500000
+      gas: 99500000,
+      gasPrice: 100,
+      allowUnlimitedContractSize: true
     },
     // rinkeby: {
     //   provider: function(){
@@ -23,7 +25,7 @@ module.exports = {
       version: "0.4.24",
       settings: {
         optimizer: {
-          enabled: true, // Default: false
+          enabled: false, // Default: false
           runs: 200      // Default: 200
         },
       }

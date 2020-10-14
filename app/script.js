@@ -1,100 +1,128 @@
 const Web3 = require('web3');
 const MyContract = require('../build/contracts/IDO.json');
+var abi = require('ethereumjs-abi')
 
-var Bob = "0xe7E65D6F06362e9F188A9DbFeE9C128Fc4B19939";
-var Alice = "0x6E1EfC6eB16A5EE76A88e28B03eb3D38828Fb98C";
+var Bob;
+var Alice;
 
-var PKalice = "7221169b5f1647d05966383174f3381f38b310f5e2ad3be2fdf93f52ff0d18ee";
+var web3 = new Web3("http://192.168.178.29:8545");
+
+async function initWeb3Accounts() {
+  var web3Accounts = await web3.eth.getAccounts().then(result => {
+    Bob = result[0];
+    Alice = result[1];
+  });
+}
+
+var PKalice = "44e6fe3a3af300d8f8b30fa03625a97bae507bdcb63fc6a75d0c47d7ef70487c";
 
 const initPChannel = async (val) => {
 
-  var MyEscrowContract = require('../build/contracts/ContributionChannel.json');
-  var web3 = new Web3("http://192.168.178.29:8545");
+  await initWeb3Accounts();
+
+  var MyEscrowContractJSON = require('../build/contracts/ContributionChannel.json');
 
   const networkId = await web3.eth.net.getId();
   MyEscrowContract = new web3.eth.Contract(
-    MyEscrowContract.abi,
-    MyEscrowContract.networks[networkId].address 
-    );
+    MyEscrowContractJSON.abi,
+    MyEscrowContractJSON.networks[networkId].address 
+  );
   var userAccount = await displayInformation(val);
 
-
   async function displayInformation(val) {
-
-    await MyEscrowContract.methods.deposit(val).send({from:Alice}).then(
-      deposit => console.log("deposited From IDOWALLET -> Alice her balance : " + val)
+    
+    await MyEscrowContract.methods.deposit(val).send({from:Bob}).then(
+      deposit => console.log("deposited IDO from Bob to MPE: " + val)
     ).catch((error) => console.log(error + "------------------"));
-    
-    var dataToSend  = "010101010110010110101010"
-    var data2ToSend = "101010101010110101010101"
 
-    var a = web3.eth.accounts.sign(dataToSend, PKalice)
-    var b = web3.eth.accounts.sign(data2ToSend,PKalice)
+    var latestChannelId = await MyEscrowContract.methods.getLatestChannelId()
+    .call().then(result => {return result});
 
-    // console.log(a);
-    // console.log(b);
-    
-   await MyEscrowContract.methods.setData( 
-    dataToSend// a.s // + a.s
-   ).send({from:Alice})
+    var Nonce = 1 ; 
+  
+    /*
+      "__openChannelByThirdParty",
+      this,
+      msg.sender,
+      signer,
+      recipient,
+      groupId,
+      value,
+      expiration,
+      messageNonce
+    */
+    var hash;
+    var singedMessage
+    function signPayment(recipient, amount, groupid, nonce, contractAddress) {
+      hash = "0x" + abi.soliditySHA3(
+          ["string", "address", "address", "address","address","uint256","uint256","uint256","uint256"],
+          ["__openChannelByThirdParty", contractAddress, Bob ,recipient,recipient,amount,1,10000000,nonce]
+      ).toString("hex");
+  
+      singedMessage = web3.eth.accounts.sign(hash, PKalice);
+  }
 
+  signPayment(Alice, 1, 1 , 1, MyEscrowContractJSON.networks[networkId].address)
 
-   await MyEscrowContract.methods.setData(
-    data2ToSend //b.s // + b.s
-   ).send({from:Bob})
+    await MyEscrowContract.methods.getECRecover(singedMessage.messageHash, singedMessage.v, singedMessage.r, singedMessage.s)
+    .call().then(result => console.log(result));
 
+   var byte32 =  web3.utils.fromAscii(1);
 
-
-    await MyEscrowContract.methods.getData(Alice).call().then(
-      logdssssa => console.log(logdssssa)
-    );
-    await MyEscrowContract.methods.getData(Bob).call().then(
-      logdssssa => console.log(logdssssa)
-    );
- 
-   
-       //  await MyEscrowContract.methods.openChannel(
-       //     Alice, // Ganache[0]
-       //     Alice, // Ganache[1]
-       //     10,1,10000) // groupId, Deposit value, expiration(in ms)
+    var gasOfOpenChannel = await MyEscrowContract.methods.openChannelByThirdParty(
+      Bob,
+      Alice, // Ganache[0]
+      Alice, // Ganache[1]
+      byte32,  // groupId,
+      1, //  Deposit value
+      10000000, // expiration(in ms)
+      1, //messageNonce
+      singedMessage.v,
+      singedMessage.r,
+      singedMessage.s,
+      singedMessage.messageHash).estimateGas({from:Bob}).then(result => {return result})
+      .catch(error => console.log(error));
 
     await MyEscrowContract.methods.openChannelByThirdParty(
-      Alice,
-      Alice, // Ganache[0]
-      Bob, // Ganache[1]
-      10,10,10000, // groupId, Deposit value, expiration(in ms)
-      0,
-      a.v,
-      a.r,
-      a.s)
+    Bob,
+    Alice, // Ganache[0]
+    Alice, // Ganache[1]
+    byte32,  // groupId,
+    1, //  Deposit value
+    10000000, // expiration(in ms)
+    1, //messageNonce
+    singedMessage.v,
+    singedMessage.r,
+    singedMessage.s,
+    singedMessage.messageHash).send({from:Bob, gas: 6721975, gasPrice: gasOfOpenChannel}).then()
+    .catch(error => console.log(error));
 
     await MyEscrowContract.methods.balances(Alice).call().then(
-      balances => console.log("BALANCE OF ALICE BEFORE === "+balances));
+      balances => console.log("BALANCE OF ALICE BEFORE Withdraw === "+balances));
 
-    await MyEscrowContract.methods.balances("0xbee673a048e9aaB284221115c86793efdE1318E4").call().then(
-      balances => console.log("BALANCE STUCK IN CHANNEL === "+balances));
+    //Later veranderen
+    await MyEscrowContract.methods.channels(0).call().then(
+        balances => console.log("CHANNEL VALUE BEFORE Claim? === "+balances.value));
+    
+   await MyEscrowContract.methods.channelClaim(
+    0,
+    1, // Actual ammount
+    1, // planned ammount
+    singedMessage.v,
+    singedMessage.r,
+    singedMessage.s,
+    false,
+    singedMessage.messageHash,
+    Alice // Receiver
+    ).send({from: Bob}) // is sendback)
 
-    for(var i = 0; i < 1; i++){
-      await MyEscrowContract.methods.balances(Bob).call().then(
-        balances => console.log("BALANCE OF Bob === "+balances));
-      await MyEscrowContract.methods.balances(Alice).call().then(
-          balances => console.log("BALANCE OF Alice === "+balances));
-      await MyEscrowContract.methods.transfer(
-        Alice,1).send({from:Alice})
-
-    }
-
-    // await MyEscrowContract.methods.balanceOwnerToken().call().then(
-    //   result => console.log("== Balance of msg.sender " + result));
-
-    // // await MyEscrowContract.methods.balanceOwnerToken(Alice).call().then(
-    // //   result => console.log("== Balance of Alice " + result));
-
-    await MyEscrowContract.methods.withdraw(10).send({from:Alice});
-
+    // AFTER CLAIM CHECK ALICE BALANCE. 
     await MyEscrowContract.methods.balances(Alice).call().then(
-      balances => console.log("BALANCE OF ALICE AFTER === "+balances));
+      balances => console.log("BALANCE OF ALICE After Claim === "+balances));
 
+    await MyEscrowContract.methods.channels(0).call().then(
+      balances => console.log("CHANNEL VALUE OF 0 After Claim? === "+balances.value));
+   
   }
   return userAccount;
 }
@@ -110,16 +138,17 @@ const contributePChannel = async (val) => {
       MyEscrowContract.networks[networkId].address 
     );
 
-    //await MyEscrowContract.methods.mint().send({from:Alice});
-    //await MyEscrowContract.methods.mint().send({from:Alice});
-    //await MyEscrowContract.methods.mint().send({from:Alice});
-    //await MyEscrowContract.methods.mint().send({from:Alice});
-    await MyEscrowContract.methods.mint().send({from:Bob});
+    //await MyEscrowContract.methods.mint().send({from:Bob});
+    var gasNeeded = await MyEscrowContract.methods.mint().estimateGas({from:Bob}).then (
+      result => {return result}
+    );
 
-    var result = await MyEscrowContract.methods.getToken(Bob).call().then(
+    await MyEscrowContract.methods.mint().send({from:Bob, gas: 6721975, gasPrice: gasNeeded});
+
+    var result = await MyEscrowContract.methods.getToken(Bob).call().then( result =>
       console.log(result)
     );
 }
 
-//initPChannel(100);
-contributePChannel(10);
+initPChannel(10);
+//contributePChannel(10);

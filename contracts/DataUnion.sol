@@ -25,15 +25,21 @@ contract DataUnion is ERC721 {
 
   /*** DATA TYPES ***/
 
-  struct Token {
+  /*struct Token {
     address mintedBy;
     uint64 mintedAt;
+  }*/
+
+  struct Token {
+    string imageUrl; //URL of image.
+    string dataType; //Annotation or Verification.
+    string data; //Variable containing AnnotationHash or Verification.
   }
 
 
   /*** STORAGE ***/
 
-  //Token[] tokens;
+  // Token[] tokens;
 
   mapping (uint256 => address) public tokenIndexToOwner;
   mapping (address => uint256) ownershipTokenCount;
@@ -41,6 +47,8 @@ contract DataUnion is ERC721 {
   mapping (address => uint[]) public test;
 
   mapping(address => Token) tokens;
+  //mapping(address => mapping(string => Token))
+  //Token[Address][ImageHash];
 
 
   /*** EVENTS ***/
@@ -78,15 +86,12 @@ contract DataUnion is ERC721 {
 
   function _mint(address _owner) internal returns (uint256 tokenId) {
     Token memory token = Token({
-      mintedBy: _owner,
-      mintedAt: 1200
+      imageUrl: "https://loremflickr.com/640/360/https://loremflickr.com/640/360/https://loremflickr.com/640/360/https://loremflickr.com/640/360/https://loremflickr.com/640/360/https://loremflickr.com/640/360/https://loremflickr.com/640/360",
+      dataType: "Annotation",
+      data: "39fb06643dc8f81d8e09cfd39fb06643dc8f81d8e09cfd39fb06643dc8f81d8e09cfd39fb06643dc8f81d8e09cfd39fb06643dc8f81d8e09cfd"
     });
 
-    //
-    //tokenId = tokens[_owner].push() - 1;
-
     tokens[_owner] = token;
-    //test[_owner].push(tokenId);
 
     emit Mint(_owner, tokenId);
 
@@ -166,11 +171,12 @@ contract DataUnion is ERC721 {
     return _mint(msg.sender);
   }
 
-  function getToken(address boeb) public view returns (address mintedBy) {
+  function getToken(address boeb) public view returns (string imageUrl, string dataType, string data) {
     Token memory token = tokens[boeb];
 
-    mintedBy = token.mintedBy;
-    //mintedAt = token.mintedAt;
+    imageUrl = token.imageUrl;
+    dataType = token.dataType;
+    data = token.data;
   }
 
   //alle token id's

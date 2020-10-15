@@ -268,7 +268,8 @@ contract ContributionChannel  {
         uint256 messageNonce,
         uint8 v,
         bytes32 r,
-        bytes32 s
+        bytes32 s,
+        bytes message
         //bytes32 message
     ) public returns (bool) {
         require(balances[msg.sender] >= value, "Insufficient balance");
@@ -277,29 +278,36 @@ contract ContributionChannel  {
         // require(messageNonce >= block.number-5 && messageNonce <= block.number+5, "Invalid message nonce");
 
         // compose the message which was signed
-        bytes32 message = //prefixed(
+        /*bytes32 message = //prefixed(
             keccak256(
                 abi.encode(
-                    "1"
-                    // "__openChannelByThirdParty",
-                    // this,
-                    // msg.sender,
-                    // signer,
-                    // recipient,
-                    // groupId,
-                    // value,
-                    // expiration,
-                    // messageNonce
+                   // "1"
+                    "__openChannelByThirdParty",
+                    this,
+                    msg.sender,
+                    signer,
+                    recipient,
+                    groupId,
+                    value,
+                    expiration,
+                    messageNonce
                 )
           //  )
-        );
+
+
+        );*/
+      //  bytes32 hash = getMessageHash(recipient,value,message,messageNonce);
+        
+        //bytes32 signedMessage = getEthSignedMessageHash(message);
 
         //check for replay attack (message can be used only once)
-        require(!usedMessages[message], "Signature has already been used");
-        usedMessages[message] = true;
+        //require(!usedMessages[message], "Signature has already been used");
+        //usedMessages[message] = true;
 
         // check that the signature is from the "sender"
-        require(ecrecover(message, v, r, s) == sender, "Invalid signature");
+        //verify(Bob,Alice,1,"validation",1,PKSignedHash.signature)
+        require(verify(signer, recipient, 1, "validation", messageNonce, message), "Invalid signature");
+        //require(ecrecover(message, v, r, s) == sender, "Invalid signature");
 
         require(
             _openChannel(sender, signer, recipient, groupId, value, expiration),
@@ -384,7 +392,8 @@ contract ContributionChannel  {
         uint8[] v,
         bytes32[] r,
         bytes32[] s ,
-        address receiver
+        address receiver,
+        bytes message
     ) public {
         uint256 len = channelIds.length;
 
@@ -406,7 +415,8 @@ contract ContributionChannel  {
                 r[i],
                 s[i],
                 isSendbacks[i],
-                receiver
+                receiver,
+                message
             );
         }
     }
@@ -420,7 +430,8 @@ contract ContributionChannel  {
         bytes32 s,
         bool isSendback,
         //bytes32 message
-        address receiver
+        address receiver,
+        bytes message
         //Nog iets recipient
     ) public {
         PaymentChannel storage channel = channels[channelId];
@@ -430,23 +441,26 @@ contract ContributionChannel  {
         require(actualAmount <= plannedAmount, "Invalid actual amount");
 
         //compose the message which was signed
-        bytes32 message = prefixed(
-            keccak256(
-                abi.encodePacked(
-                    "__MPE_claim_message",
-                    this,
-                    channelId,
-                    channel.nonce,
-                    plannedAmount
-                )
-            )
-        );
+        // bytes32 message = prefixed(
+        //     keccak256(
+        //         abi.encodePacked(
+        //             "__MPE_claim_message",
+        //             this,
+        //             channelId,
+        //             channel.nonce,
+        //             plannedAmount
+        //         )
+        //     )
+        // );
         // check that the signature is from the signer
-        address signAddress = ecrecover(message, v, r, s);
-        require(
-            signAddress == channel.signer || signAddress == channel.sender,
-            "Invalid signature"
-        );
+       // address signAddress = ecrecover(message, v, r, s);
+        // require(
+        //     signAddress == channel.signer || signAddress == channel.sender,
+        //     "Invalid signature"
+        // );
+
+        require(verify(msg.sender, receiver, 1, "validation", 1, message), "Invalid signature");
+
 
         //transfer amount from the channel to the sender
         channel.value = channel.value.sub(actualAmount);

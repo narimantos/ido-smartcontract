@@ -100,7 +100,7 @@ const initPChannel = async (val) => {
       splittedSignatureOfhash.v,
       splittedSignatureOfhash.r,
       splittedSignatureOfhash.s,
-      signatureOfhash
+      PKSignedHash.signature
       //singedMessage.messageHash
       ).estimateGas({from:Bob}).then(result => {return result})
       .catch(error => console.log(error + " estimateGas"));
@@ -116,7 +116,7 @@ const initPChannel = async (val) => {
     splittedSignatureOfhash.v,
     splittedSignatureOfhash.r,
     splittedSignatureOfhash.s,
-    signatureOfhash
+    PKSignedHash.signature
     //singedMessage.messageHash
     ).send({from:Bob, gas: 6721975, gasPrice: gasOfOpenChannel}).then()
     .catch(error => console.log(error + " send"));
@@ -137,7 +137,9 @@ const initPChannel = async (val) => {
     splittedSignatureOfhash.s,
     false,
  //   singedMessage.messageHash,
-    Alice // Receiver
+    Alice,
+    PKSignedHash.signature
+     // Receiver
     ).send({from: Bob}) // is sendback)
 
     // AFTER CLAIM CHECK ALICE BALANCE. 

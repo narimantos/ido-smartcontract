@@ -14,8 +14,8 @@ async function initWeb3Accounts() {
   });
 }
 
-var PKalice = "d0ed80569b141eee6b58f2df03880370094abfab72fd2f6a111517e00f72af58";
-var PKBob = "a64598b5e2075a865bddac9d87c405143ad0fc03b839cdac2e74f2af488717fa";
+var PKalice = "c508da2422ff925bb181d1b2e856f1ba76951dfacd5e7a7565a633aa37228ff4";
+var PKBob = "393fa98532f1c153ad5f8880dcd98a021836d1fb9f30373c424e1388ac71ca00";
 
 const initPChannel = async (val) => {
   await initWeb3Accounts();
@@ -56,53 +56,33 @@ const initPChannel = async (val) => {
     var byte32 =  web3.utils.fromAscii(1);
     var hash;
     var singedMessage;
+    var PKSignedHash;
+    var signatureOfhash; 
+    var splittedSignatureOfhash; 
     async function signPayment(recipient, amount, groupid, nonce, contractAddress) {
-      hash = "0x" + abi.soliditySHA3(
-          ["string", "address", "address", "address","address","uint256","uint256","uint256","uint256"],
-          ["__openChannelByThirdParty", contractAddress, Bob ,Bob,recipient,amount,1,10000000,nonce]
-      ).toString("hex");
-
+     
     hash = await MyEscrowContract.methods.getMessageHash(Alice,1,"validation",1).call()
     .then(result => {return result});
-    signatureOfhash = await MyEscrowContract.methods.getEthSignedMessageHash(hash).call()
+    console.log("Hash is :") ;  console.log(hash)
+
+    PKSignedHash = await web3.eth.accounts.sign(hash,PKBob);
+    console.log("PKSignedHash is :") ;  console.log(PKSignedHash)
+
+    signatureOfhash = await MyEscrowContract.methods.getEthSignedMessageHash(PKSignedHash.message).call()
     .then(result => {return result});
+    console.log("signatureOfhash is :") ;  console.log(signatureOfhash)
  
-    PKSignedHash = web3.eth.accounts.sign(signatureOfhash,PKBob);
+    // ownVerify = await MyEscrowContract.methods.recoverSigner(signatureOfhash, PKSignedHash.signature).call()
+    // .then(result => {return result});
+    // console.log("ownVerify is :") ;  console.log(ownVerify)
 
-    console.log(signatureOfhash.length + " length of signature");
-
-    verify = await MyEscrowContract.methods.verify(
-      Bob,Alice,1,"validation",1,PKSignedHash.signature).call()
+    verify = await MyEscrowContract.methods.verify(Bob,Alice,1,"validation",1,PKSignedHash.signature).call()
     .then(result => {return result});
-    console.log("is het waar of niet waar *deuntje*" + verify);
+    console.log("Verify is :" + verify);
 
-    /*newPUBKEY = await MyEscrowContract.methods.recoverSigner(hash,signatureOfhash).call()
-    .then(result => console.log("newPUBKEY : "+ result));*/
-
-    console.log("BOBKEY IS " + newPUBKEY);
-
-      hashNUMBER1 = web3.utils.sha3("1");
-
-      hashWeb3 = web3.utils.sha3("__openChannelByThirdParty", contractAddress, Bob ,Bob,recipient,amount,1,10000000,nonce);
-
-      //hash = web3.eth.accounts.hashMessage(hash);
-
-      console.log(hash + " hash");
-      console.log(hashWeb3 + " hashWeb3");
-
-
-      singedMessage = web3.eth.accounts.sign(hashNUMBER1, PKBob);
-      console.log("SINGED 1 met ")
-      console.log(singedMessage);
-      // await MyEscrowContract.methods.getECRecover(singedMessage.messageHash, singedMessage.v, singedMessage.r, singedMessage.s)
-      // .call().then(result => console.log(result));
-
-      await MyEscrowContract.methods.keccakMessage()
-      .call({from:Bob}).then(result => console.log("SINGED met SC: "+ result)).catch(error => console.log(error + " estimateGas"));
-
-      //console.log(singedMessage.message + " hallo2");
-  }
-
+    splittedSignatureOfhash = await MyEscrowContract.methods.splitSignature(PKSignedHash.signature).call()
+    .then(result => {return result});
+    }
 
     await signPayment(Alice, 1, 1 , 1, MyEscrowContractJSON.networks[networkId].address)
 
@@ -117,9 +97,10 @@ const initPChannel = async (val) => {
       1, //  Deposit value
       10000000, // expiration(in ms)
       1, //messageNonce
-      singedMessage.v,
-      singedMessage.r,
-      singedMessage.s,
+      splittedSignatureOfhash.v,
+      splittedSignatureOfhash.r,
+      splittedSignatureOfhash.s,
+      signatureOfhash
       //singedMessage.messageHash
       ).estimateGas({from:Bob}).then(result => {return result})
       .catch(error => console.log(error + " estimateGas"));
@@ -132,9 +113,10 @@ const initPChannel = async (val) => {
     1, //  Deposit value
     10000000, // expiration(in ms)
     1, //messageNonce
-    singedMessage.v,
-    singedMessage.r,
-    singedMessage.s
+    splittedSignatureOfhash.v,
+    splittedSignatureOfhash.r,
+    splittedSignatureOfhash.s,
+    signatureOfhash
     //singedMessage.messageHash
     ).send({from:Bob, gas: 6721975, gasPrice: gasOfOpenChannel}).then()
     .catch(error => console.log(error + " send"));
@@ -150,9 +132,9 @@ const initPChannel = async (val) => {
     0,
     1, // Actual ammount
     1, // planned ammount
-    singedMessage.v,
-    singedMessage.r,
-    singedMessage.s,
+    splittedSignatureOfhash.v,
+    splittedSignatureOfhash.r,
+    splittedSignatureOfhash.s,
     false,
  //   singedMessage.messageHash,
     Alice // Receiver

@@ -27,7 +27,7 @@ contract ContributionChannel  {
     mapping(address => uint256) public balances; //tokens which have been deposit but haven't been escrowed in the channels
 
     uint256 public nextChannelId; //id of the next channel (and size of channels)
-    
+
     IDO public token; // Address of token contract
 
     //already used messages for openChannelByThirdParty in order to prevent replay attack
@@ -83,18 +83,6 @@ contract ContributionChannel  {
         return true;
     }
 
-    function setData(string a) public {
-         token.setData(msg.sender, a);
-    }
-
-    function getLatestChannelId() public view returns (uint) {
-        return nextChannelId;
-    }
-
-    function getData(address adr)  public view returns (string) {
-        return token.getData(adr);
-    }
-
     function depositTo(address to, uint256 value) public returns (bool) {
 
         require (
@@ -139,7 +127,6 @@ contract ContributionChannel  {
     }
 
     function transfer(address receiver, uint256 value) public returns (bool) {
-        
         require(
             balances[msg.sender] >= value,
             "Insufficient balance in the contract"
@@ -186,28 +173,87 @@ contract ContributionChannel  {
         return ecrecover(message, v, r, s);
     }
 
-    function keccakMessage(
-        address signer,
-        address recipient,
-        bytes32 groupId,
-        uint256 value,
-        uint256 expiration,
-        uint256 messageNonce) public returns (bytes32) {
+    function getMessageHash(address _to, uint _amount, string memory _message, uint _nonce) public pure returns (bytes32)
+    {
+        return keccak256(abi.encodePacked(_to, _amount, _message, _nonce));
+    }
+
+    function getEthSignedMessageHash(bytes32 _messageHash) public pure returns (bytes32) {
+        /*
+        Signature is produced by signing a keccak256 hash with the following format:
+        "\x19Ethereum Signed Message\n" + len(msg) + msg
+        */
+        return keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", _messageHash));
+    }
+
+    
+
+       function verify(
+        address _signer,
+        address _to, uint _amount, string memory _message, uint _nonce,
+        bytes memory signature
+    )
+        public pure returns (bool)
+    {
+        bytes32 messageHash = getMessageHash(_to, _amount, _message, _nonce);
+        bytes32 ethSignedMessageHash = getEthSignedMessageHash(messageHash);
+
+        return recoverSigner(ethSignedMessageHash, signature) == _signer;
+    }
+
+
+    function recoverSigner(bytes32 _ethSignedMessageHash, bytes memory _signature)
+    public pure returns (address){
+        (bytes32 r, bytes32 s, uint8 v) = splitSignature(_signature);
+
+        return ecrecover(_ethSignedMessageHash, v, r, s);
+    }
+
+
+    function splitSignature(bytes memory sig)
+    public pure returns (bytes32 r, bytes32 s, uint8 v)
+    {
+        require(sig.length == 65, "invalid signature length");
+
+        assembly {
+            /*
+            First 32 bytes stores the length of the signature
+
+            add(sig, 32) = pointer of sig + 32
+            effectively, skips first 32 bytes of signature
+
+            mload(p) loads next 32 bytes starting at the memory address p into memory
+            */
+
+            // first 32 bytes, after the length prefix
+            r := mload(add(sig, 32))
+            // second 32 bytes
+            s := mload(add(sig, 64))
+            // final byte (first byte of the next 32 bytes)
+            v := byte(0, mload(add(sig, 96)))
+        }
+
+    }
+
+    function keccakMessage() public view returns (bytes32) {
             bytes32 message = prefixed(
                 keccak256(
                     abi.encodePacked(
-                        "__openChannelByThirdParty",
-                        this,
-                        msg.sender,
-                        signer,
-                        recipient,
-                        groupId,
-                        value,
-                        expiration,
-                        messageNonce
+                        "1", // 0x00000001 
+                        "2"  // 0x00000010
+                        // "__openChannelByThirdParty",
+                        // this,
+                        // msg.sender,
+                        // signer,
+                        // recipient,
+                        // groupId,
+                        // value,
+                        // expiration,
+                        // messageNonce
                     )
                 )
             );
+            //address messageAddress = ecrecover(message, v, r, s);
             return message;
         }
 
@@ -222,37 +268,38 @@ contract ContributionChannel  {
         uint256 messageNonce,
         uint8 v,
         bytes32 r,
-        bytes32 s,
-        bytes32 message
+        bytes32 s
+        //bytes32 message
     ) public returns (bool) {
         require(balances[msg.sender] >= value, "Insufficient balance");
 
         // Blocks seems to take variable time based on network congestion for now removing it. Message nounce will be a blocknumber
-        //require(messageNonce >= block.number-5 && messageNonce <= block.number+5, "Invalid message nonce");
+        // require(messageNonce >= block.number-5 && messageNonce <= block.number+5, "Invalid message nonce");
 
-        //compose the message which was signed
-        // bytes32 message = prefixed(
-        //     keccak256(
-        //         abi.encodePacked(
-        //             "__openChannelByThirdParty",
-        //             this,
-        //             msg.sender,
-        //             signer,
-        //             recipient,
-        //             groupId,
-        //             value,
-        //             expiration,
-        //             messageNonce
-        //         )
-        //     )
-        // );
+        // compose the message which was signed
+        bytes32 message = //prefixed(
+            keccak256(
+                abi.encode(
+                    "1"
+                    // "__openChannelByThirdParty",
+                    // this,
+                    // msg.sender,
+                    // signer,
+                    // recipient,
+                    // groupId,
+                    // value,
+                    // expiration,
+                    // messageNonce
+                )
+          //  )
+        );
 
         //check for replay attack (message can be used only once)
         require(!usedMessages[message], "Signature has already been used");
         usedMessages[message] = true;
 
         // check that the signature is from the "sender"
-        require(ecrecover(message, v, r, s) == recipient, "Invalid signature");
+        require(ecrecover(message, v, r, s) == sender, "Invalid signature");
 
         require(
             _openChannel(sender, signer, recipient, groupId, value, expiration),
@@ -329,38 +376,40 @@ contract ContributionChannel  {
     //  * @param r channel senders signatures in V R S for each channel
     //  * @param s channel senders signatures in V R S for each channel
     //  */
-    // function multiChannelClaim(
-    //     uint256[] channelIds,
-    //     uint256[] actualAmounts,
-    //     uint256[] plannedAmounts,
-    //     bool[] isSendbacks,
-    //     uint8[] v,
-    //     bytes32[] r,
-    //     bytes32[] s
-    // ) public {
-    //     uint256 len = channelIds.length;
+    function multiChannelClaim(
+        uint256[] channelIds,
+        uint256[] actualAmounts,
+        uint256[] plannedAmounts,
+        bool[] isSendbacks,
+        uint8[] v,
+        bytes32[] r,
+        bytes32[] s ,
+        address receiver
+    ) public {
+        uint256 len = channelIds.length;
 
-    //     require(
-    //         plannedAmounts.length == len &&
-    //             actualAmounts.length == len &&
-    //             isSendbacks.length == len &&
-    //             v.length == len &&
-    //             r.length == len &&
-    //             s.length == len,
-    //         "Invalid function parameters."
-    //     );
-    //     for (uint256 i = 0; i < len; i++) {
-    //         channelClaim(
-    //             channelIds[i],
-    //             actualAmounts[i],
-    //             plannedAmounts[i],
-    //             v[i],
-    //             r[i],
-    //             s[i],
-    //             isSendbacks[i]
-    //         );
-    //     }
-    // }
+        require(
+            plannedAmounts.length == len &&
+                actualAmounts.length == len &&
+                isSendbacks.length == len &&
+                v.length == len &&
+                r.length == len &&
+                s.length == len,
+            "Invalid function parameters."
+        );
+        for (uint256 i = 0; i < len; i++) {
+            channelClaim(
+                channelIds[i],
+                actualAmounts[i],
+                plannedAmounts[i],
+                v[i],
+                r[i],
+                s[i],
+                isSendbacks[i],
+                receiver
+            );
+        }
+    }
 
     function channelClaim(
         uint256 channelId,
@@ -369,8 +418,8 @@ contract ContributionChannel  {
         uint8 v,
         bytes32 r,
         bytes32 s,
-        bool isSendback, 
-        bytes32 message,
+        bool isSendback,
+        //bytes32 message
         address receiver
         //Nog iets recipient
     ) public {
@@ -381,17 +430,17 @@ contract ContributionChannel  {
         require(actualAmount <= plannedAmount, "Invalid actual amount");
 
         //compose the message which was signed
-        // bytes32 message = prefixed(
-        //     keccak256(
-        //         abi.encodePacked(
-        //             "__MPE_claim_message",
-        //             this,
-        //             channelId,
-        //             channel.nonce,
-        //             plannedAmount
-        //         )
-        //     )
-        // );
+        bytes32 message = prefixed(
+            keccak256(
+                abi.encodePacked(
+                    "__MPE_claim_message",
+                    this,
+                    channelId,
+                    channel.nonce,
+                    plannedAmount
+                )
+            )
+        );
         // check that the signature is from the signer
         address signAddress = ecrecover(message, v, r, s);
         require(
@@ -401,17 +450,17 @@ contract ContributionChannel  {
 
         //transfer amount from the channel to the sender
         channel.value = channel.value.sub(actualAmount);
-        //balances[msg.sender] = balances[msg.sender].add(actualAmount);
+       // balances[msg.sender] = balances[msg.sender].add(actualAmount);
         balances[receiver] = balances[receiver].add(actualAmount);
-        
+
 
         if (isSendback) {
             _channelSendbackAndReopenSuspended(channelId);
             emit ChannelClaim(
                 channelId,
                 channel.nonce,
-                //msg.sender,
-                receiver,
+                msg.sender,
+               // receiver,
                 actualAmount,
                 plannedAmount,
                 channel.value,
@@ -423,8 +472,8 @@ contract ContributionChannel  {
             emit ChannelClaim(
                 channelId,
                 channel.nonce,
-                //msg.sender,
-                receiver,
+                msg.sender,
+               // receiver,
                 actualAmount,
                 plannedAmount,
                 0,
